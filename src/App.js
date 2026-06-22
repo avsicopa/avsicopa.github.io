@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./styles.css";
 import { useBrazilWorldCup2026 } from "./hooks/useBrazilWorldCup2026";
 import MatchCard from "./components/MatchCard";
