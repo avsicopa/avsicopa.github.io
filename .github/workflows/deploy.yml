@@ -17,7 +17,7 @@ steps:
   - name: Configura Node.js
     uses: actions/setup-node@v4 # ATUALIZADO para v4
     with:
-      node-version: '20' # Mantido em 20, mas com setup-node@v4 deve funcionar. Se der erro, tente '18' ou '22'.
+      node-version: '22' # Mudei de 20 pra 22, mas com setup-node@v4 deve funcionar. Se der erro, tente '18' ou '20'.
 
   - name: Instala dependências
     run: npm install
