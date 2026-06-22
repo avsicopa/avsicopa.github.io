@@ -1,0 +1,33 @@
+name: Deploy React App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+steps:
+  - name: Checkout do código
+    uses: actions/checkout@v4 # ATUALIZADO para v4
+
+  - name: Configura Node.js
+    uses: actions/setup-node@v4 # ATUALIZADO para v4
+    with:
+      node-version: '20' # Mantido em 20, mas com setup-node@v4 deve funcionar. Se der erro, tente '18' ou '22'.
+
+  - name: Instala dependências
+    run: npm install
+
+  - name: Constrói o projeto React
+    run: npm run build
+
+  - name: Deploy para GitHub Pages
+    uses: peaceiris/actions-gh-pages@v4 # ATUALIZADO para v4
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      publish_dir: ./build
+      publish_branch: gh-pages

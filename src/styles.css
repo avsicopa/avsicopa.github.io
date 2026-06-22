@@ -1,0 +1,739 @@
+/* Variáveis de Cores da Bandeira do Brasil */
+:root {
+    --verde-claro: #e0ffe0; /* Fundo verde suave */
+    --verde-bandeira: #009c3b;
+    --amarelo-bandeira: #fcd116;
+    --azul-bandeira: #0035a9;
+    --branco: #ffffff;
+    --cinza-claro: #f0f0f0;
+    --cinza-medio: #ccc;
+    --cinza-escuro: #333;
+    --vermelho-cartao: #e74c3c;
+    --amarelo-cartao: #f1c40f;
+    --rosa-hits: #ff2bd6; /* Cor do contador de visitantes */
+}
+
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--verde-claro); /* Fundo verde suave */
+    color: var(--cinza-escuro);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Cabeçalho */
+.header {
+    background-color: var(--verde-bandeira);
+    color: var(--branco);
+    padding: 10px 20px; /* Reduzido o padding */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo-container {
+    flex-basis: 120px; /* Largura base para a logo */
+    min-width: 70px; /* Largura mínima para a logo */
+    margin-right: 15px; /* Reduzido */
+}
+
+.logo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.title-container {
+    flex-grow: 1;
+    text-align: center;
+    margin-bottom: 5px; /* Reduzido */
+}
+
+.main-title {
+    font-size: 2.2em; /* Reduzido */
+    font-weight: bold;
+    color: var(--amarelo-bandeira);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.main-title .highlight {
+    color: var(--branco);
+    font-size: 0.7em; /* Reduzido */
+    display: block;
+    margin-top: 3px; /* Reduzido */
+}
+
+/* Menu abaixo do cabeçalho */
+.menu {
+    background-color: var(--azul-bandeira);
+    color: var(--branco);
+    padding: 8px 20px; /* Reduzido */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    margin-top: 8px; /* Reduzido */
+    border-radius: 5px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    margin-left: 20px; /* Reduzido */
+    font-size: 1em; /* Reduzido */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.menu-item:hover {
+    color: var(--amarelo-bandeira);
+}
+
+.menu-item span {
+    margin-right: 5px;
+}
+
+/* Estilo específico para o contador de visitantes */
+.visitor-counter-item {
+    background: #555;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 10px; /* Reduzido */
+    border-radius: 5px;
+    cursor: default;
+}
+
+.visitor-counter-item .visitor-label {
+    color: var(--branco);
+    font-weight: bold;
+}
+
+.visitor-count-img {
+    height: 25px; /* Reduzido */
+    vertical-align: middle;
+}
+
+.menu-link {
+    text-decoration: none;
+    color: var(--branco);
+    font-weight: bold;
+}
+
+/* Layout Principal (Container) */
+.container {
+    display: flex;
+    flex: 1;
+    padding: 15px; /* Reduzido */
+    gap: 15px; /* Reduzido */
+    align-items: flex-start; /* Adicionado para alinhar os sidebars no topo */
+}
+
+/* Coluna da Esquerda (Sidebar) e Coluna da Direita */
+.sidebar-left,
+.sidebar-right {
+    flex: 0 0 280px; /* Largura fixa para a sidebar */
+    background-color: var(--branco);
+    padding: 15px; /* Reduzido */
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: calc(100vh - 160px); /* Ajustado para o cabeçalho menor */
+}
+
+.sidebar-right {
+    order: 3; /* Garante que a sidebar da direita fique à direita no layout flex */
+}
+
+.section-title {
+    color: var(--verde-bandeira);
+    font-size: 1.6em; /* Reduzido */
+    margin-bottom: 15px; /* Reduzido */
+    border-bottom: 2px solid var(--amarelo-bandeira);
+    padding-bottom: 8px; /* Reduzido */
+}
+
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Reduzido */
+}
+
+.match-card {
+    background-color: var(--cinza-claro);
+    padding: 12px; /* Reduzido */
+    border-radius: 8px;
+    border-left: 5px solid var(--azul-bandeira);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.match-card:hover {
+    transform: translateY(-3px);
+}
+
+.match-card.active {
+    border: 2px solid var(--amarelo-bandeira);
+    box-shadow: 0 0 10px rgba(252, 209, 22, 0.5);
+}
+
+.match-card.upcoming {
+    border-left-color: var(--amarelo-bandeira);
+    background-color: #fffbe6;
+}
+
+.match-card.live {
+    border-left-color: var(--vermelho-cartao);
+    background-color: #ffebeb;
+}
+
+.match-card.finished {
+    border-left-color: var(--verde-bandeira);
+}
+
+/* Estilos para o MatchCard */
+.match-teams-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1em; /* Reduzido */
+    font-weight: bold;
+    margin-bottom: 3px; /* Reduzido */
+    gap: 8px;
+}
+
+.team-info {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Espaço entre o crest e o nome do time */
+}
+
+.team-crest {
+    width: 20px; /* Tamanho do crest na sidebar */
+    height: 20px;
+    object-fit: contain;
+}
+
+.score-info {
+    font-size: 1.1em; /* Reduzido */
+    color: var(--azul-bandeira);
+    margin: 0 5px; /* Espaçamento para o placar */
+    white-space: nowrap;
+}
+
+.match-date-time-line {
+    display: flex;
+    justify-content: center;
+    gap: 5px; /* Reduzido */
+    font-size: 0.85em; /* Reduzido */
+    color: #555;
+    margin-bottom: 3px; /* Reduzido */
+}
+
+.match-status-badge {
+    display: block;
+    text-align: center;
+    font-size: 0.8em; /* Reduzido */
+    font-weight: bold;
+    padding: 6px 8px; /* Ajustado para texto maior */
+    border-radius: 4px;
+    margin-top: 5px; /* Reduzido */
+    line-height: 1.4;
+}
+
+.match-status-badge.finished {
+    background-color: var(--verde-bandeira);
+    color: var(--branco);
+}
+
+.match-status-badge.live {
+    background-color: #dbe9ff;
+    color: var(--azul-bandeira);
+    font-weight: 700;
+}
+
+.match-status-badge.upcoming {
+    background-color: var(--amarelo-bandeira);
+    color: var(--cinza-escuro);
+}
+
+.match-status-badge.other-status {
+    background-color: var(--cinza-medio);
+    color: var(--cinza-escuro);
+}
+
+/* Quando o destaque for favorável ao adversário */
+.match-status-badge.adversary-highlight {
+    background-color: #ffe5e5;
+    color: var(--vermelho-cartao);
+    font-weight: 700;
+}
+
+/* Área Central (Main Content) */
+.main-content {
+    flex: 1;
+    background-color: var(--branco);
+    padding: 20px; /* Reduzido */
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: calc(100vh - 160px); /* Ajustado para o cabeçalho menor */
+}
+
+.welcome-message {
+    text-align: center;
+    padding: 40px 20px; /* Reduzido */
+    color: #666;
+}
+
+.welcome-message h2 {
+    color: var(--verde-bandeira);
+    font-size: 2em; /* Reduzido */
+    margin-bottom: 10px; /* Reduzido */
+}
+
+.welcome-message p {
+    font-size: 1em; /* Reduzido */
+    margin-bottom: 8px; /* Reduzido */
+}
+
+/* Detalhes do Jogo (Central) */
+.game-details {
+    text-align: center;
+}
+
+.team-display-central {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Reduzido */
+    margin-bottom: 15px; /* Reduzido */
+    font-size: 2em; /* Reduzido */
+    font-weight: bold;
+    color: var(--azul-bandeira);
+}
+
+.team-crest-central {
+    width: 50px; /* Tamanho do crest na área central */
+    height: 50px;
+    object-fit: contain;
+}
+
+.team-name-central {
+    /* Estilo para o nome do time */
+}
+
+.vs-text-central {
+    color: var(--cinza-escuro);
+    font-size: 0.7em; /* "vs." um pouco menor */
+}
+
+.game-score {
+    font-size: 2.5em; /* Reduzido */
+    font-weight: bold;
+    color: var(--azul-bandeira);
+    margin-bottom: 20px; /* Reduzido */
+    background-color: var(--amarelo-bandeira);
+    display: inline-block;
+    padding: 8px 20px; /* Reduzido */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.game-summary {
+    text-align: left;
+    background-color: var(--cinza-claro);
+    padding: 12px; /* Reduzido *15-12/
+    border-radius: 8px;
+    margin-top: 20px; /* Reduzido */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.game-summary h3 {
+    color: var(--verde-bandeira);
+    font-size: 1.4em; /* Reduzido */
+    margin-bottom: 8px; /* Reduzido *10-8/
+    border-bottom: 1px solid var(--cinza-medio);
+    padding-bottom: 8px; /* Reduzido */
+}
+
+.game-summary p {
+    margin-bottom: 8px; /* Reduzido */
+    font-size: 0.95em; /* Reduzido */
+}
+
+.game-summary ul {
+    list-style: none;
+    padding: 0;
+}
+
+.game-summary ul li {
+    background-color: var(--branco);
+    margin-bottom: 5px; /* Reduzido *6-5/
+    padding: 6px 10px; /* Reduzido *8x12-6x10/
+    border-radius: 5px;
+    border-left: 4px solid var(--azul-bandeira);
+    display: flex;
+    align-items: center;
+    font-size: 0.95em; /* Reduzido */
+}
+
+.game-summary ul li strong {
+    color: var(--verde-bandeira);
+    margin-right: 5px; /* Espaço após o strong */
+}
+
+/* Status em azul e negrito no resumo */
+.status-highlight {
+    color: var(--azul-bandeira);
+    font-weight: 700;
+}
+
+/* Status em vermelho quando favorecer o adversário */
+.status-highlight.status-highlight-adversary {
+    color: var(--vermelho-cartao);
+    font-weight: 700;
+}
+
+/* Lista de últimos eventos */
+.status-event-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.status-event-list li {
+    background-color: var(--branco);
+    margin-bottom: 6px; /* Reduzido */
+    padding: 8px 12px; /* Reduzido */
+    border-radius: 5px;
+    border-left: 4px solid var(--azul-bandeira);
+    font-size: 0.95em; /* Reduzido */
+    color: var(--azul-bandeira);
+    font-weight: 700;
+}
+
+/* Evento em vermelho quando favorecer o adversário */
+.status-event-list li.adversary-highlight {
+    color: var(--vermelho-cartao);
+    border-left-color: var(--vermelho-cartao);
+}
+
+/* Fale Conosco Section */
+.contact-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.contact-section.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.contact-content {
+    background-color: var(--branco);
+    padding: 25px; /* Reduzido */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 700px; /* Reduzido */
+    width: 90%;
+    max-height: 85vh; /* Reduzido */
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px; /* Reduzido */
+    right: 10px; /* Reduzido */
+    background: none;
+    border: none;
+    font-size: 1.8em; /* Reduzido */
+    color: var(--cinza-escuro);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: var(--vermelho-cartao);
+}
+
+.contact-title {
+    color: var(--azul-bandeira);
+    font-size: 1.8em; /* Reduzido */
+    margin-bottom: 20px; /* Reduzido */
+    text-align: center;
+    border-bottom: 2px solid var(--amarelo-bandeira);
+    padding-bottom: 12px; /* Reduzido */
+}
+
+.contact-title .highlight {
+    color: var(--verde-bandeira);
+}
+
+.store-card {
+    background-color: var(--cinza-claro);
+    padding: 15px; /* Reduzido */
+    border-radius: 8px;
+    margin-bottom: 15px; /* Reduzido */
+    border-left: 5px solid var(--verde-bandeira);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.store-card h3 {
+    color: var(--azul-bandeira);
+    font-size: 1.3em; /* Reduzido */
+    margin-bottom: 8px; /* Reduzido */
+}
+
+.store-card p {
+    margin-bottom: 4px; /* Reduzido */
+    font-size: 0.95em; /* Reduzido */
+}
+
+.store-card p strong {
+    color: var(--verde-bandeira);
+}
+
+.contact-link {
+    color: var(--azul-bandeira);
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.contact-link:hover {
+    text-decoration: underline;
+}
+
+.map-link {
+    color: var(--verde-bandeira);
+    font-weight: bold;
+}
+
+.map-link:hover {
+    text-decoration: underline;
+}
+
+.phone-icon, .map-icon {
+    margin-right: 5px;
+    color: var(--amarelo-bandeira);
+}
+
+.about-us-card {
+    background-color: var(--amarelo-bandeira);
+    padding: 15px; /* Reduzido */
+    border-radius: 8px;
+    border-left: 5px solid var(--azul-bandeira);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Reduzido */
+}
+
+.about-us-card h3 {
+    color: var(--azul-bandeira);
+    font-size: 1.4em; /* Reduzido */
+    margin-bottom: 12px; /* Reduzido */
+    text-align: center;
+}
+
+.about-us-card ul {
+    list-style: disc;
+    margin-left: 15px; /* Reduzido */
+    color: var(--cinza-escuro);
+}
+
+.about-us-card ul li {
+    margin-bottom: 6px; /* Reduzido */
+    font-size: 0.95em; /* Reduzido */
+}
+
+.about-us-card ul li strong {
+    color: var(--verde-bandeira);
+}
+
+/* Botões do menu em branco e negrito - MAIS ESPECÍFICO */
+.menu button.menu-item {
+    color: var(--branco) !important;
+    font-weight: bold !important;
+}
+
+/* Hover amarelo para o botão */
+.menu button.menu-item:hover:not(:disabled) {
+    color: var(--amarelo-bandeira) !important;
+}
+
+/* Quando desabilitado */
+.menu button.menu-item:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: var(--branco) !important;
+}
+
+/* Título "Outros Países" em vermelho */
+.sidebar-right .section-title {
+    color: var(--vermelho-cartao); /* ✅ VERMELHO */
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .main-title {
+        font-size: 1.8em;
+    }
+
+    .main-title .highlight {
+        font-size: 0.8em;
+    }
+
+    .menu {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .menu-item {
+        margin: 0 10px;
+    }
+
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .sidebar-left,
+    .sidebar-right {
+        flex: 1 1 auto;
+        max-height: none;
+        margin-bottom: 15px;
+    }
+
+    .main-content {
+        flex: 1 1 auto;
+        max-height: none;
+    }
+
+    .team-crest-central {
+        width: 40px;
+        height: 40px;
+    }
+
+    .team-display-central {
+        font-size: 1.6em;
+    }
+
+    .vs-text-central {
+        font-size: 0.6em;
+    }
+
+    .game-score {
+        font-size: 2em;
+    }
+
+    .contact-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .contact-title {
+        font-size: 1.6em;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-title {
+        font-size: 1.5em;
+    }
+
+    .main-title .highlight {
+        font-size: 0.6em;
+    }
+
+    .menu {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .menu-item {
+        margin: 0;
+    }
+
+    .section-title {
+        font-size: 1.3em;
+    }
+
+    .match-teams-line {
+        font-size: 0.9em;
+        flex-direction: column;
+    }
+
+    .team-crest {
+        width: 18px;
+        height: 18px;
+    }
+
+    .score-info {
+        font-size: 1em;
+    }
+
+    .match-date-time-line {
+        font-size: 0.8em;
+    }
+
+    .game-details h2 {
+        font-size: 1.5em;
+    }
+
+    .team-display-central {
+        font-size: 1.4em;
+        flex-direction: column;
+    }
+
+    .team-crest-central {
+        width: 30px;
+        height: 30px;
+    }
+
+    .game-score {
+        font-size: 1.8em;
+    }
+
+    .game-summary h3 {
+        font-size: 1.2em;
+    }
+
+    .store-card h3 {
+        font-size: 1.1em;
+    }
+}
