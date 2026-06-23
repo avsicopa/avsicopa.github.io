@@ -78,7 +78,7 @@ function getRecentEvents(match) {
 }
 
 async function apiGet(url, signal) {
-    const proxiedUrl = `${CORS_PROXY_URL}url=${encodeURIComponent(url)}&_=${Date.now()}&debug=1`;
+    // const proxiedUrl = `${CORS_PROXY_URL}url=${encodeURIComponent(url)}&_=${Date.now()}&debug=1`;
 
     const res = await fetch(proxiedUrl, {
         signal,
