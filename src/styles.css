@@ -644,7 +644,7 @@ body {
 /* Responsividade */
 @media (max-width: 992px) {
     .qrcode-container {
-        display: none; /* Esconde QR Code em Telas menores */
+        display: none; /* Esconde QR Code em telas menores */
     }
     
     .palpite-item {

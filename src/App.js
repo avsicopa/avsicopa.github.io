@@ -124,7 +124,7 @@ function App() {
                 </div>
             </header>
 
-            {/* ✅  MENU COM "NOSSAS LOJAS" */}
+            {/* ✅ MENU COM "NOSSAS LOJAS" */}
                <div className="menu">
                 {/* ✅ LINK DO PALPITÃO */}
     <div className="menu-item palpite-item">
