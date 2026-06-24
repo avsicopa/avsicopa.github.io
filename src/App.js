@@ -112,11 +112,34 @@ function App() {
                         Copa do Mundo 2026
                         <span className="highlight">Brasil x AVSI</span>
                     </h1>
+                    </div>
+
+    {/* ✅ QR CODE COM GIF ANIMADO - ALINHADO À DIREITA */}
+    <div className="qrcode-container">
+        <img
+            src={`${process.env.PUBLIC_URL}/QRCode-Bola.gif`}
+            alt="QR Code Palpite AVSI"
+            className="qrcode"
+        />
                 </div>
             </header>
 
             {/* ✅ MENU COM "NOSSAS LOJAS" */}
-            <div className="menu">
+               <div className="menu">
+                {/* ✅ LINK DO PALPITÃO */}
+    <div className="menu-item palpite-item">
+        <span>🎯</span>
+        <span>Palpitão AVSI - Dê seu Palpite clique aqui:</span>
+        <a 
+            href="https://forms.office.com/r/HY6qJPQzd6" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="palpite-link"
+        >
+            Clique Aqui
+        </a>
+    </div>
+      {/* Contador de Visitantes */}
                 <div className="menu-item visitor-counter-item">
                     <span className="visitor-label">Visitantes:</span>
                     <img
@@ -134,6 +157,7 @@ function App() {
                     <span>📞</span> Nossas Lojas
                 </button>
 
+ {/* Botão Atualizar */}
                 <button
                     className="menu-item"
                     onClick={reload}

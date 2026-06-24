@@ -598,6 +598,62 @@ body {
     color: var(--vermelho-cartao); /* ✅ VERMELHO */
 }
 
+/* QR Code no Header - Alinhado à Direita */
+.qrcode-container {
+    flex-basis: 100px;
+    min-width: 80px;
+    margin-left: 15px;
+}
+
+.qrcode {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    max-height: 80px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Link do Palpitão no Menu */
+.palpite-item {
+    background-color: var(--amarelo-bandeira);
+    padding: 5px 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 15px;
+}
+
+.palpite-item span {
+    color: var(--cinza-escuro);
+    font-weight: bold;
+}
+
+.palpite-link {
+    color: var(--azul-bandeira);
+    text-decoration: underline;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.palpite-link:hover {
+    color: var(--vermelho-cartao);
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .qrcode-container {
+        display: none; /* Esconde QR Code em telas menores */
+    }
+    
+    .palpite-item {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+}
+
 /* Responsividade */
 @media (max-width: 992px) {
     .header {
