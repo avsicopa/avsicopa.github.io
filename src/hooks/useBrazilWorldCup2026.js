@@ -4,7 +4,7 @@ const API_KEY = "53356cf4d2194f55b1f8bccccc45abe6";
 const BRAZIL_TEAM_ID = 764;
 const COMPETITION_CODE = "WC";
 const SEASON = 2026;
-// const CORS_PROXY_URL = "https://corsproxy.io/?"; // Não usado mais
+const CORS_PROXY_URL = "https://corsproxy.io/?";
 
 const LIVE_STATUSES = ["LIVE", "IN_PLAY", "PAUSED"];
 const LIVE_DURATIONS = ["EXTRA_TIME", "PENALTY_SHOOTOUT"];
@@ -81,8 +81,10 @@ async function apiGet(url, signal) {
     // ✅REMOVIDO O CORS PROXY - Fazendo requisição direta:
     // const proxiedUrl = `${CORS_PROXY_URL}url=${encodeURIComponent(url)}&_=${Date.now()}&debug=1`;
 
-    // ✅ Usa 'url' diretamente em vez de 'proxiedUrl'
-    const res = await fetch(url, {
+    // ✅ USAR O CORS PROXY (necessário para evitar bloqueio CORS)
+    const proxiedUrl = `${CORS_PROXY_URL}${encodeURIComponent(url)}`;
+
+    const res = await fetch(proxiedUrl, {
         signal,
         cache: "no-store",
         headers: {
