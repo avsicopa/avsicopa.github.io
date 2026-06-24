@@ -143,7 +143,7 @@ function App() {
                 <div className="menu-item visitor-counter-item">
                     <span className="visitor-label">Visitantes:</span>
                     <img
-                        src="https://hitwebcounter.com/counter/counter.php?page=17471562&style=0006&nbdigits=6&type=page&initCount=0"
+                        src="https://hits.sh/avsicopa.github.io.svg?label=%20&color=ff2bd6&labelColor=ff2bd6&style=for-the-badge"
                         alt="Contador de Visitantes"
                         className="visitor-count-img"
                     />

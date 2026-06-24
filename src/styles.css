@@ -122,7 +122,7 @@ body {
 }
 
 .visitor-count-img {
-    height: 25px; /* Reduzido */
+    height: 30px; /* Aumentado de 25px para 30px */
     vertical-align: middle;
 }
 
@@ -260,7 +260,7 @@ body {
 }
 
 .match-status-badge.live {
-    background-color: #dbe9ff;
+    background-color: #ca4c4c;
     color: var(--azul-bandeira);
     font-weight: 700;
 }
