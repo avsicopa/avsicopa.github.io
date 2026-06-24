@@ -78,7 +78,7 @@ function getRecentEvents(match) {
 }
 
 async function apiGet(url, signal) {
-    // ✅ REMOVIDO O CORS PROXY - Fazendo requisição direta:
+    // ✅REMOVIDO O CORS PROXY - Fazendo requisição direta:
     // const proxiedUrl = `${CORS_PROXY_URL}url=${encodeURIComponent(url)}&_=${Date.now()}&debug=1`;
 
     // ✅ Usa 'url' diretamente em vez de 'proxiedUrl'
