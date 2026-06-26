@@ -67,22 +67,45 @@ function App() {
         ];
     }, [otherMatches]);
 
-    useEffect(() => {
-        if (!loading && !error && !activeMatchId) {
-            const allAvailableMatches = [
-                ...(Array.isArray(globalLiveNow) ? globalLiveNow : []),
-                globalNextMatch,
-                ...(Array.isArray(brazilLiveNow) ? brazilLiveNow : []),
-                brazilNextMatch,
-                ...(Array.isArray(brazilPastResults) ? brazilPastResults : []),
-                ...(Array.isArray(otherMatches) ? otherMatches : []),
-            ].filter(Boolean);
-
-            if (allAvailableMatches.length > 0) {
-                setActiveMatchId(allAvailableMatches[0].id);
-            }
+useEffect(() => {
+    if (!loading && !error && !activeMatchId) {
+        // ✅ PRIORIDADE 1: Jogo do Brasil AO VIVO
+        if (brazilLiveNow && brazilLiveNow.length > 0) {
+            setActiveMatchId(brazilLiveNow[0].id);
+            return;
         }
-    }, [loading, error, activeMatchId, globalLiveNow, globalNextMatch, brazilLiveNow, brazilNextMatch, brazilPastResults, otherMatches]);
+
+        // ✅ PRIORIDADE 2: Próximo jogo do Brasil
+        if (brazilNextMatch) {
+            setActiveMatchId(brazilNextMatch.id);
+            return;
+        }
+
+        // ✅ PRIORIDADE 3: Último resultado do Brasil
+        if (brazilPastResults && brazilPastResults.length > 0) {
+            setActiveMatchId(brazilPastResults[0].id);
+            return;
+        }
+
+        // PRIORIDADE 4: Jogos ao vivo de outros países
+        if (globalLiveNow && globalLiveNow.length > 0) {
+            setActiveMatchId(globalLiveNow[0].id);
+            return;
+        }
+
+        // PRIORIDADE 5: Próximo jogo de outros países
+        if (globalNextMatch) {
+            setActiveMatchId(globalNextMatch.id);
+            return;
+        }
+
+        // PRIORIDADE 6: Outros jogos
+        if (otherMatches && otherMatches.length > 0) {
+            setActiveMatchId(otherMatches[0].id);
+            return;
+        }
+    }
+}, [loading, error, activeMatchId, brazilLiveNow, brazilNextMatch, brazilPastResults, globalLiveNow, globalNextMatch, otherMatches]);
 
     const activeMatch = useMemo(() => {
         if (!activeMatchId || !Array.isArray(allMatches)) return null;

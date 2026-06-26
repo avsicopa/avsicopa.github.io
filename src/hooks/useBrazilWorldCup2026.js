@@ -4,7 +4,17 @@ const API_KEY = "53356cf4d2194f55b1f8bccccc45abe6";
 const BRAZIL_TEAM_ID = 764;
 const COMPETITION_CODE = "WC";
 const SEASON = 2026;
-const CORS_PROXY_URL = "https://corsproxy.io/?";
+// ❌ ANTES (não funciona mais):
+// const CORS_PROXY_URL = "https://corsproxy.io/?";
+
+// ✅ OPÇÃO 1 - AllOrigins (Recomendado):
+const CORS_PROXY_URL = "https://api.allorigins.win/raw?url=";
+
+// ✅ OPÇÃO 2 - CORS Anywhere:
+// const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+
+// ✅ OPÇÃO 3 - Proxy próprio (mais confiável):
+// const CORS_PROXY_URL = "https://corsproxy.org/?";
 
 const LIVE_STATUSES = ["LIVE", "IN_PLAY", "PAUSED"];
 const LIVE_DURATIONS = ["EXTRA_TIME", "PENALTY_SHOOTOUT"];
@@ -77,23 +87,32 @@ function getRecentEvents(match) {
     return events.slice(0, 5);
 }
 
-async function apiGet(url, signal) {
+// async function apiGet(url, signal) {
     // ✅REMOVIDO O CORS PROXY - Fazendo requisição direta:
     // const proxiedUrl = `${CORS_PROXY_URL}url=${encodeURIComponent(url)}&_=${Date.now()}&debug=1`;
+    //    const res = await fetch(proxiedUrl, {
+      //  signal,
+        //cache: "no-store",
+        //headers: {
+            //"X-Auth-Token": API_KEY,
+            //"X-Unfold-Goals": "true",
+            //"X-Unfold-Bookings": "true",
+            //"X-Unfold-Subs": "true",
+            //"Cache-Control": "no-cache",
+            //Pragma: "no-cache",
+        //},
+    //});
 
-    // ✅ USAR O CORS PROXY (necessário para evitar bloqueio CORS)
+async function apiGet(url, signal) {
+    // ✅ Com AllOrigins
     const proxiedUrl = `${CORS_PROXY_URL}${encodeURIComponent(url)}`;
 
     const res = await fetch(proxiedUrl, {
         signal,
         cache: "no-store",
         headers: {
-            "X-Auth-Token": API_KEY,
-            "X-Unfold-Goals": "true",
-            "X-Unfold-Bookings": "true",
-            "X-Unfold-Subs": "true",
-            "Cache-Control": "no-cache",
-            Pragma: "no-cache",
+            // ⚠️ AllOrigins não precisa de headers customizados
+            // A API key vai no parâmetro da URL
         },
     });
 
@@ -102,7 +121,13 @@ async function apiGet(url, signal) {
         throw new Error(`Erro ${res.status}: ${text}`);
     }
 
-    return res.json();
+    //return res.json();
+//}
+
+ const data = await res.json();
+    
+    // ✅ A resposta vem direto, sem wrapper
+    return data;
 }
 
 function isBrazilMatch(match) {

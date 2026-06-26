@@ -654,142 +654,161 @@ body {
     }
 }
 
-/* Responsividade */
+/* Responsividade para Tablets */
 @media (max-width: 992px) {
     .header {
         flex-direction: column;
         text-align: center;
     }
-
+    
     .logo-container {
         margin-right: 0;
         margin-bottom: 10px;
     }
-
+    
     .main-title {
         font-size: 1.8em;
     }
-
+    
     .main-title .highlight {
         font-size: 0.8em;
     }
-
+    
     .menu {
         justify-content: center;
         margin-top: 10px;
     }
-
+    
     .menu-item {
         margin: 0 10px;
     }
-
+    
     .container {
         flex-direction: column;
         padding: 10px;
+        align-items: center; /* ✅ CENTRALIZA NO CELULAR */
     }
-
+    
     .sidebar-left,
     .sidebar-right {
         flex: 1 1 auto;
         max-height: none;
         margin-bottom: 15px;
+        width: 100%; /* ✅ OCUPA LARGURA TOTAL */
+        max-width: 600px; /* ✅ LIMITA LARGURA MÁXIMA */
     }
-
+    
     .main-content {
         flex: 1 1 auto;
         max-height: none;
+        width: 100%; /* ✅ OCUPA LARGURA TOTAL */
+        max-width: 600px; /* ✅ LIMITA LARGURA MÁXIMA */
     }
-
+    
     .team-crest-central {
         width: 40px;
         height: 40px;
     }
-
+    
     .team-display-central {
         font-size: 1.6em;
     }
-
+    
     .vs-text-central {
         font-size: 0.6em;
     }
-
+    
     .game-score {
         font-size: 2em;
     }
-
+    
     .contact-content {
         width: 95%;
         padding: 15px;
     }
-
+    
     .contact-title {
         font-size: 1.6em;
     }
 }
 
+/* Responsividade para Celulares */
 @media (max-width: 576px) {
     .main-title {
         font-size: 1.5em;
     }
-
+    
     .main-title .highlight {
         font-size: 0.6em;
     }
-
+    
     .menu {
         flex-direction: column;
         gap: 8px;
+        align-items: center; /* ✅ CENTRALIZA ITENS DO MENU */
     }
-
+    
     .menu-item {
         margin: 0;
     }
-
+    
     .section-title {
         font-size: 1.3em;
     }
-
+    
     .match-teams-line {
         font-size: 0.9em;
         flex-direction: column;
     }
-
+    
     .team-crest {
         width: 18px;
         height: 18px;
     }
-
+    
     .score-info {
         font-size: 1em;
     }
-
+    
     .match-date-time-line {
         font-size: 0.8em;
     }
-
+    
     .game-details h2 {
         font-size: 1.5em;
     }
-
+    
     .team-display-central {
         font-size: 1.4em;
         flex-direction: column;
     }
-
+    
     .team-crest-central {
         width: 30px;
         height: 30px;
     }
-
+    
     .game-score {
         font-size: 1.8em;
     }
-
+    
     .game-summary h3 {
         font-size: 1.2em;
     }
-
+    
     .store-card h3 {
         font-size: 1.1em;
+    }
+    
+    /* ✅ CENTRALIZA QUADROS NO CELULAR */
+    .sidebar-left,
+    .sidebar-right,
+    .main-content {
+        margin: 10px auto;
+        text-align: center;
+    }
+    
+    .match-card {
+        text-align: left; /* Mantém texto dos cards alinhado à esquerda */
     }
 }
