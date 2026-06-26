@@ -8,10 +8,10 @@ const SEASON = 2026;
 // const CORS_PROXY_URL = "https://corsproxy.io/?";
 
 // ✅ OPÇÃO 1 - AllOrigins (Recomendado):
-const CORS_PROXY_URL = "https://api.allorigins.win/raw?url=";
+// const CORS_PROXY_URL = "https://api.allorigins.win/raw?url=";
 
 // ✅ OPÇÃO 2 - CORS Anywhere:
-// const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 
 // ✅ OPÇÃO 3 - Proxy próprio (mais confiável):
 // const CORS_PROXY_URL = "https://corsproxy.org/?";
@@ -88,47 +88,48 @@ function getRecentEvents(match) {
 }
 
 // async function apiGet(url, signal) {
-    // ✅REMOVIDO O CORS PROXY - Fazendo requisição direta:
-    // const proxiedUrl = `${CORS_PROXY_URL}url=${encodeURIComponent(url)}&_=${Date.now()}&debug=1`;
-    //    const res = await fetch(proxiedUrl, {
-      //  signal,
-        //cache: "no-store",
-        //headers: {
-            //"X-Auth-Token": API_KEY,
-            //"X-Unfold-Goals": "true",
-            //"X-Unfold-Bookings": "true",
-            //"X-Unfold-Subs": "true",
-            //"Cache-Control": "no-cache",
-            //Pragma: "no-cache",
-        //},
-    //});
-
-async function apiGet(url, signal) {
-    // ✅ Com AllOrigins
-    const proxiedUrl = `${CORS_PROXY_URL}${encodeURIComponent(url)}`;
+    // ✅ CORS Anywhere usa concatenação simples
+    const proxiedUrl = `${CORS_PROXY_URL}${url}`;
 
     const res = await fetch(proxiedUrl, {
         signal,
         cache: "no-store",
         headers: {
-            // ⚠️ AllOrigins não precisa de headers customizados
-            // A API key vai no parâmetro da URL
+            "X-Auth-Token": API_KEY,
+            "X-Unfold-Goals": "true",
+            "X-Unfold-Bookings": "true",
+            "X-Unfold-Subs": "true",
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
         },
     });
+
+// async function apiGet(url, signal) {
+    // ✅ Com AllOrigins
+   // const proxiedUrl = `${CORS_PROXY_URL}${encodeURIComponent(url)}`;
+
+    // const res = await fetch(proxiedUrl, {
+       //  signal,
+        // cache: "no-store",
+        // headers: {
+            // ⚠️ AllOrigins não precisa de headers customizados
+            // A API key vai no parâmetro da URL
+        // },
+    // });
 
     if (!res.ok) {
         const text = await res.text();
         throw new Error(`Erro ${res.status}: ${text}`);
     }
 
-    //return res.json();
-//}
+    return res.json();
+}
 
- const data = await res.json();
+// const data = await res.json();
     
     // ✅ A resposta vem direto, sem wrapper
-    return data;
-}
+  //  return data;
+//}
 
 function isBrazilMatch(match) {
     return (
