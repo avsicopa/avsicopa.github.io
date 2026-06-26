@@ -163,59 +163,62 @@ function App() {
             </header>
 
             {/* MENU */}
-            <div className="menu">
-                {/* Palpitão AVSI */}
-                <div className="menu-item palpite-item">
-                    <span>🎯</span>
-                    <span>Palpitão AVSI - Dê seu Palpite clique aqui:</span>
-                    <a 
-                        href="https://forms.office.com/r/HY6qJPQzd6" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="palpite-link"
-                    >
-                        Clique Aqui
-                    </a>
-                </div>
+<div className="menu">
+    {/* ✅ Palpitão à ESQUERDA */}
+    <div className="menu-item palpite-item">
+        <span>🎯</span>
+        <span>Palpitão AVSI - Dê seu Palpite clique aqui:</span>
+        <a 
+            href="https://forms.office.com/r/HY6qJPQzd6" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="palpite-link"
+        >
+            Clique Aqui
+        </a>
+    </div>
 
-                {/* ✅ Linha com Visitantes, Lojas, Atualizar */}
-                <div className="menu-buttons-row">
-                    {/* Contador de Visitantes */}
-                    <div className="menu-item visitor-counter-item">
-                        <span className="visitor-label">Visitantes:</span>
-                        <img
-                            src="https://hits.sh/avsicopa.github.io.svg?label=%20&color=ff2bd6&labelColor=ff2bd6&style=for-the-badge"
-                            alt="Contador de Visitantes"
-                            className="visitor-count-img"
-                        />
-                    </div>
+    {/* ✅ ESPAÇADOR - Empurra botões para direita */}
+    <div className="menu-spacer"></div>
 
-                    {/* Botão Nossas Lojas */}
-                    <button
-                        className="menu-item contact-menu"
-                        onClick={() => setShowContact(true)}
-                        style={{ 
-                            background: 'none', 
-                            border: 'none', 
-                            cursor: 'pointer',
-                            color: 'white',
-                            fontWeight: 'bold'
-                        }}
-                    >
-                        <span>📞</span> Nossas Lojas
-                    </button>
+    {/* ✅ Botões à DIREITA */}
+    <div className="menu-buttons-row">
+        {/* Contador de Visitantes */}
+        <div className="menu-item visitor-counter-item">
+            <span className="visitor-label">Visitantes:</span>
+            <img
+                src="https://hits.sh/avsicopa.github.io.svg?label=%20&color=ff2bd6&labelColor=ff2bd6&style=for-the-badge"
+                alt="Contador de Visitantes"
+                className="visitor-count-img"
+            />
+        </div>
 
-                    {/* Botão Atualizar */}
-                    <button
-                        className="menu-item"
-                        onClick={reload}
-                        disabled={loading}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                    >
-                        {loading ? "⏳ Carregando..." : "🔄 Atualizar"}
-                    </button>
-                </div>
-            </div>
+        {/* Botão Nossas Lojas */}
+        <button
+            className="menu-item contact-menu"
+            onClick={() => setShowContact(true)}
+            style={{ 
+                background: 'none', 
+                border: 'none', 
+                cursor: 'pointer',
+                color: 'white',
+                fontWeight: 'bold'
+            }}
+        >
+            <span>📞</span> Nossas Lojas
+        </button>
+
+        {/* Botão Atualizar */}
+        <button
+            className="menu-item"
+            onClick={reload}
+            disabled={loading}
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+            {loading ? "⏳ Carregando..." : "🔄 Atualizar"}
+        </button>
+    </div>
+</div>
 
             <div className="container">
                 {/* SIDEBAR ESQUERDA - BRASIL */}

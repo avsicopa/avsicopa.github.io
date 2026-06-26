@@ -81,8 +81,7 @@ body {
     color: var(--branco);
     padding: 8px 20px; /* Reduzido */
     display: flex;
-    // justify-content: flex-end; /* ❌ Alinha tudo à direita */
-    justify-content: flex-start; /* ✅ Alinha à esquerda */
+    justify-content: flex-end; /*✅ Alinha à direita */
     align-items: center;
     width: 100%;
     margin-top: 8px; /* Reduzido */
@@ -292,6 +291,7 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
     max-height: calc(100vh - 160px); /* Ajustado para o cabeçalho menor */
+    position: relative; /* ✅ ADICIONE ESTA LINHA */
 }
 
 .welcome-message {
@@ -314,6 +314,26 @@ body {
 /* Detalhes do Jogo (Central) */
 .game-details {
     text-align: center;
+}
+
+/* ✅ ADICIONE AQUI: */
+/* Indicador de rotação automática */
+.rotation-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--vermelho-cartao);
+    color: var(--branco);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
 
 .team-display-central {
@@ -615,6 +635,26 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Espaçador para separar Palpitão (esquerda) dos botões (direita) */
+.menu-spacer {
+    flex: 1; /* ✅ Ocupa todo o espaço disponível */
+}
+
+/* Menu no PC */
+.menu {
+    background-color: var(--azul-bandeira);
+    color: var(--branco);
+    padding: 8px 20px;
+    display: flex;
+    justify-content: flex-start; /* ✅ Começa à esquerda */
+    align-items: center;
+    width: 100%;
+    margin-top: 8px;
+    border-radius: 5px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 /* Link do Palpitão no Menu */
 .palpite-item {
     background-color: var(--amarelo-bandeira);
@@ -622,9 +662,16 @@ body {
     border-radius: 5px;
     display: flex;
     align-items: center;
-    justify-content: center; /* ✅ Centralizado no PC */
     gap: 8px;
-    margin-right: 15px;
+    margin-right: 0; /* ✅ Remove margem */
+}
+
+.menu-buttons-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-left: auto; /* ✅ Empurra para direita */
 }
 
 .palpite-item span {
