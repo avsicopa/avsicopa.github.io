@@ -643,69 +643,74 @@ body {
 
 /* Responsividade para Celulares (até 576px) */
 @media (max-width: 576px) {
-    /* ✅ HEADER - Logo à esquerda, QR Code à direita, título embaixo */
+    /* ✅ HEADER - Logo, Título e QR Code NA MESMA LINHA */
     .header {
-        flex-direction: row !important; /* ✅ Sobrescreve o column do tablet */
-        flex-wrap: wrap;
+        flex-direction: row; /* ✅ Mantém em linha */
+        flex-wrap: nowrap; /* ✅ NÃO quebra linha */
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         text-align: center;
+        padding: 8px 10px;
     }
     
     .logo-container {
-        flex-basis: 80px !important; /* ✅ Logo maior no celular */
-        min-width: 70px;
-        margin-right: 0;
-        margin-bottom: 0;
-        order: 1; /* ✅ Primeira posição (esquerda) */
+        flex-basis: 70px; /* ✅ Logo mantém tamanho */
+        min-width: 60px;
+        margin: 0;
+        order: 1; /* ✅ Primeira (esquerda) */
     }
     
     .logo {
-        max-height: 70px !important; /* ✅ Logo maior que o padrão do tablet */
-    }
-    
-    .qrcode-container {
-        flex-basis: 80px !important; /* ✅ QR Code maior no celular */
-        min-width: 70px;
-        margin-left: 0;
-        order: 3; /* ✅ Terceira posição (direita) */
-        display: block !important; /* ✅ Mostra QR Code (estava none no tablet) */
-    }
-    
-    .qrcode {
-        max-height: 70px !important; /* ✅ QR Code maior */
+        max-height: 60px; /* ✅ Logo tamanho bom */
     }
     
     .title-container {
-        flex-basis: 100%; /* ✅ Ocupa linha inteira */
-        order: 2; /* ✅ Segunda posição (fica embaixo) */
-        margin-top: 10px;
+        flex: 1; /* ✅ Ocupa espaço do meio */
+        order: 2; /* ✅ Segunda (centro) */
+        margin: 0;
+        padding: 0 5px;
         text-align: center;
     }
     
     .main-title {
-        font-size: 1.5em;
+        font-size: 1.1em; /* ✅ Título MENOR para caber */
+        line-height: 1.2;
     }
     
     .main-title .highlight {
-        font-size: 0.6em;
+        font-size: 0.7em;
+        margin-top: 2px;
+    }
+    
+    .qrcode-container {
+        flex-basis: 70px; /* ✅ QR Code mantém tamanho */
+        min-width: 60px;
+        margin: 0;
+        order: 3; /* ✅ Terceira (direita) */
+        display: block !important; /* ✅ Mostra QR Code */
+    }
+    
+    .qrcode {
+        max-height: 60px; /* ✅ QR Code mesmo tamanho da logo */
     }
     
     /* ✅ MENU - Palpitão em cima, resto em linha embaixo */
     .menu {
         flex-direction: column !important;
         gap: 10px;
-        align-items: stretch; /* ✅ Ocupa largura total */
+        align-items: stretch;
+        padding: 8px 10px;
     }
     
     .palpite-item {
-        width: 100%; /* ✅ Palpitão ocupa linha inteira */
+        width: 100%;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
         gap: 5px;
         text-align: center;
-        order: 1; /* ✅ Primeiro item */
+        order: 1;
+        font-size: 0.85em;
     }
     
     /* ✅ Linha com Visitantes, Nossas Lojas, Atualizar */
@@ -715,22 +720,23 @@ body {
         align-items: center;
         width: 100%;
         gap: 5px;
-        order: 2; /* ✅ Segundo item */
+        order: 2;
     }
     
     .visitor-counter-item {
-        flex: 0 0 auto; /* ✅ Fica à esquerda */
+        flex: 0 0 auto;
         margin: 0;
-        font-size: 0.75em; /* ✅ Menor para caber */
+        font-size: 0.7em;
+        padding: 2px 6px;
     }
     
     .visitor-count-img {
-        height: 20px; /* ✅ Reduz tamanho do contador */
+        height: 18px;
     }
     
     .contact-menu,
     .menu-item:not(.palpite-item):not(.visitor-counter-item) {
-        flex: 1; /* ✅ Dividem o espaço restante igualmente */
+        flex: 1;
         margin: 0;
         font-size: 0.75em;
         padding: 6px 4px;
@@ -739,6 +745,24 @@ body {
     
     .menu-item {
         margin: 0;
+    }
+    
+    /* ✅ CONTAINER - QUADROS EM COLUNA CENTRALIZADOS */
+    .container {
+        flex-direction: column; /* ✅ Empilha em coluna */
+        padding: 10px;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .sidebar-left,
+    .sidebar-right,
+    .main-content {
+        flex: 1 1 auto;
+        width: 100%; /* ✅ Ocupa largura total */
+        max-width: 100%; /* ✅ Remove limite */
+        margin: 0 auto 10px; /* ✅ Centralizado */
+        max-height: none;
     }
     
     /* Resto das regras */
@@ -782,6 +806,10 @@ body {
         font-size: 1.8em;
     }
     
+    .game-summary {
+        text-align: left;
+    }
+    
     .game-summary h3 {
         font-size: 1.2em;
     }
@@ -790,15 +818,7 @@ body {
         font-size: 1.1em;
     }
     
-    /* ✅ CENTRALIZA QUADROS NO CELULAR */
-    .sidebar-left,
-    .sidebar-right,
-    .main-content {
-        margin: 10px auto;
-        text-align: center;
-    }
-    
     .match-card {
-        text-align: left; /* Mantém texto dos cards alinhado à esquerda */
+        text-align: left;
     }
 }
