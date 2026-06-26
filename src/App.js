@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./styles.css";
 import { useBrazilWorldCup2026 } from "./hooks/useBrazilWorldCup2026";
 import MatchCard from "./components/MatchCard";
@@ -37,6 +37,7 @@ function App() {
     const [activeMatchId, setActiveMatchId] = useState(null);
     const [showContact, setShowContact] = useState(false);
 
+    // ✅ Garante que são arrays antes de fazer spread
     const leftSidebarMatches = useMemo(() => {
         return [
             ...(Array.isArray(brazilLiveNow) ? brazilLiveNow : []),
@@ -67,60 +68,61 @@ function App() {
         ];
     }, [otherMatches]);
 
-// ✅ Rotação automática de jogos
-useEffect(() => {
-    if (loading || error) return;
+    // ✅ Rotação automática de jogos
+    useEffect(() => {
+        if (loading || error) return;
 
-    // PRIORIDADE 1: Jogo do Brasil AO VIVO (nunca rotaciona)
-    if (brazilLiveNow && brazilLiveNow.length > 0) {
-        if (activeMatchId !== brazilLiveNow[0].id) {
-            setActiveMatchId(brazilLiveNow[0].id);
-        }
-        return; // Para aqui, não rotaciona
-    }
-
-    // PRIORIDADE 2: Jogos AO VIVO de outros países (rotaciona)
-    if (globalLiveNow && globalLiveNow.length > 0) {
-        const interval = setInterval(() => {
-            setActiveMatchId(prevId => {
-                const currentIndex = globalLiveNow.findIndex(m => m.id === prevId);
-                const nextIndex = (currentIndex + 1) % globalLiveNow.length;
-                return globalLiveNow[nextIndex].id;
-            });
-        }, 10000); // ✅ 10 segundos
-
-        // Define o primeiro jogo se não houver ativo
-        if (!activeMatchId || !globalLiveNow.find(m => m.id === activeMatchId)) {
-            setActiveMatchId(globalLiveNow[0].id);
+        // PRIORIDADE 1: Jogo do Brasil AO VIVO (nunca rotaciona)
+        if (brazilLiveNow && brazilLiveNow.length > 0) {
+            if (activeMatchId !== brazilLiveNow[0].id) {
+                setActiveMatchId(brazilLiveNow[0].id);
+            }
+            return; // Para aqui, não rotaciona
         }
 
-        return () => clearInterval(interval);
-    }
+        // PRIORIDADE 2: Jogos AO VIVO de outros países (rotaciona a cada 10s)
+        if (globalLiveNow && globalLiveNow.length > 0) {
+            const interval = setInterval(() => {
+                setActiveMatchId(prevId => {
+                    const currentIndex = globalLiveNow.findIndex(m => m.id === prevId);
+                    const nextIndex = (currentIndex + 1) % globalLiveNow.length;
+                    return globalLiveNow[nextIndex].id;
+                });
+            }, 10000); // ✅ 10 segundos
 
-    // PRIORIDADE 3: Próximo jogo do Brasil
-    if (brazilNextMatch) {
-        if (activeMatchId !== brazilNextMatch.id) {
-            setActiveMatchId(brazilNextMatch.id);
+            // Define o primeiro jogo se não houver ativo
+            if (!activeMatchId || !globalLiveNow.find(m => m.id === activeMatchId)) {
+                setActiveMatchId(globalLiveNow[0].id);
+            }
+
+            return () => clearInterval(interval);
         }
-        return;
-    }
 
-    // PRIORIDADE 4: Último resultado do Brasil
-    if (brazilPastResults && brazilPastResults.length > 0) {
-        if (activeMatchId !== brazilPastResults[0].id) {
-            setActiveMatchId(brazilPastResults[0].id);
+        // PRIORIDADE 3: Próximo jogo do Brasil
+        if (brazilNextMatch) {
+            if (activeMatchId !== brazilNextMatch.id) {
+                setActiveMatchId(brazilNextMatch.id);
+            }
+            return;
         }
-        return;
-    }
 
-    // PRIORIDADE 5: Qualquer outro jogo
-    if (otherMatches && otherMatches.length > 0) {
-        if (activeMatchId !== otherMatches[0].id) {
-            setActiveMatchId(otherMatches[0].id);
+        // PRIORIDADE 4: Último resultado do Brasil
+        if (brazilPastResults && brazilPastResults.length > 0) {
+            if (activeMatchId !== brazilPastResults[0].id) {
+                setActiveMatchId(brazilPastResults[0].id);
+            }
+            return;
         }
-    }
-}, [loading, error, activeMatchId, brazilLiveNow, globalLiveNow, brazilNextMatch, brazilPastResults, otherMatches]);
 
+        // PRIORIDADE 5: Qualquer outro jogo
+        if (otherMatches && otherMatches.length > 0) {
+            if (activeMatchId !== otherMatches[0].id) {
+                setActiveMatchId(otherMatches[0].id);
+            }
+        }
+    }, [loading, error, activeMatchId, brazilLiveNow, globalLiveNow, brazilNextMatch, brazilPastResults, otherMatches]);
+
+    // ✅ Encontra o jogo ativo
     const activeMatch = useMemo(() => {
         if (!activeMatchId || !Array.isArray(allMatches)) return null;
         return allMatches.find((m) => m.id === activeMatchId) || null;
@@ -149,60 +151,71 @@ useEffect(() => {
                         Copa do Mundo 2026
                         <span className="highlight">Brasil x AVSI</span>
                     </h1>
-                    </div>
+                </div>
 
-    {/* ✅ QR CODE COM GIF ANIMADO - ALINHADO À DIREITA */}
-    <div className="qrcode-container">
-        <img
-            src={`${process.env.PUBLIC_URL}/QRCode-Bola.gif`}
-            alt="QR Code Palpite AVSI"
-            className="qrcode"
-        />
+                {/* QR CODE À DIREITA */}
+                <div className="qrcode-container">
+                    <img
+                        src={`${process.env.PUBLIC_URL}/QRCode-Bola.gif`}
+                        alt="QR Code Palpite AVSI"
+                        className="qrcode"
+                    />
                 </div>
             </header>
 
-            {/* ✅ MENU COM "NOSSAS LOJAS" */}
-               <div className="menu">
-                {/* ✅ LINK DO PALPITÃO */}
-    <div className="menu-item palpite-item">
-        <span>🎯</span>
-        <span>Palpitão AVSI - Dê seu Palpite clique aqui:</span>
-        <a 
-            href="https://forms.office.com/r/HY6qJPQzd6" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="palpite-link"
-        >
-            Clique Aqui
-        </a>
-    </div>
-      {/* Contador de Visitantes */}
-                <div className="menu-item visitor-counter-item">
-                    <span className="visitor-label">Visitantes:</span>
-                    <img
-                        src="https://hits.sh/avsicopa.github.io.svg?label=%20&color=ff2bd6&labelColor=ff2bd6&style=for-the-badge"
-                        alt="Contador de Visitantes"
-                        className="visitor-count-img"
-                    />
+            {/* MENU */}
+            <div className="menu">
+                {/* Palpitão AVSI */}
+                <div className="menu-item palpite-item">
+                    <span>🎯</span>
+                    <span>Palpitão AVSI - Dê seu Palpite clique aqui:</span>
+                    <a 
+                        href="https://forms.office.com/r/HY6qJPQzd6" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="palpite-link"
+                    >
+                        Clique Aqui
+                    </a>
                 </div>
 
-                <button
-                    className="menu-item contact-menu"
-                    onClick={() => setShowContact(true)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                >
-                    <span>📞</span> Nossas Lojas
-                </button>
+                {/* ✅ Linha com Visitantes, Lojas, Atualizar */}
+                <div className="menu-buttons-row">
+                    {/* Contador de Visitantes */}
+                    <div className="menu-item visitor-counter-item">
+                        <span className="visitor-label">Visitantes:</span>
+                        <img
+                            src="https://hits.sh/avsicopa.github.io.svg?label=%20&color=ff2bd6&labelColor=ff2bd6&style=for-the-badge"
+                            alt="Contador de Visitantes"
+                            className="visitor-count-img"
+                        />
+                    </div>
 
- {/* Botão Atualizar */}
-                <button
-                    className="menu-item"
-                    onClick={reload}
-                    disabled={loading}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                >
-                    {loading ? "⏳ Carregando..." : "🔄 Atualizar"}
-                </button>
+                    {/* Botão Nossas Lojas */}
+                    <button
+                        className="menu-item contact-menu"
+                        onClick={() => setShowContact(true)}
+                        style={{ 
+                            background: 'none', 
+                            border: 'none', 
+                            cursor: 'pointer',
+                            color: 'white',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        <span>📞</span> Nossas Lojas
+                    </button>
+
+                    {/* Botão Atualizar */}
+                    <button
+                        className="menu-item"
+                        onClick={reload}
+                        disabled={loading}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                        {loading ? "⏳ Carregando..." : "🔄 Atualizar"}
+                    </button>
+                </div>
             </div>
 
             <div className="container">
@@ -232,17 +245,17 @@ useEffect(() => {
 
                 {/* ÁREA CENTRAL */}
                 <main className="main-content">
-                    {!activeMatch ? (
-                        <div className="welcome-message">
-                            <h2>Bem-vindo ao Painel da Copa! ⚽</h2>
-                            <p>
-                                Selecione um jogo nas colunas laterais para ver os detalhes,
-                                ou aguarde o próximo jogo ao vivo.
-                            </p>
+                    {/* ✅ Indicador quando está rotacionando */}
+                    {globalLiveNow && globalLiveNow.length > 1 && 
+                     (!brazilLiveNow || brazilLiveNow.length === 0) && (
+                        <div className="rotation-indicator">
+                            🔄 Rotação automática
                         </div>
-                    ) : (
+                    )}
+
+                    {activeMatch ? (
                         <div className="game-details">
-                            {/* ✅ TIMES NA MESMA LINHA COM VS. */}
+                            {/* Times na mesma linha com vs. */}
                             <div className="team-display-central">
                                 {homeTeamCrest && (
                                     <img
@@ -265,12 +278,12 @@ useEffect(() => {
                                 )}
                             </div>
 
-                            {/* ✅ PLACAR ABAIXO */}
+                            {/* Placar abaixo */}
                             <div className="game-score">
                                 {homeScore ?? "-"} x {awayScore ?? "-"}
                             </div>
 
-                            {/* ✅ RESUMO ABAIXO DO PLACAR */}
+                            {/* Resumo abaixo do placar */}
                             <div className="game-summary">
                                 <h3>Resumo</h3>
                                 <ul>
@@ -330,10 +343,18 @@ useEffect(() => {
                                 )}
                             </div>
                         </div>
+                    ) : (
+                        <div className="welcome-message">
+                            <h2>Bem-vindo ao Painel da Copa! ⚽</h2>
+                            <p>
+                                Selecione um jogo nas colunas laterais para ver os detalhes,
+                                ou aguarde o próximo jogo ao vivo.
+                            </p>
+                        </div>
                     )}
                 </main>
 
-                {/* ✅ SIDEBAR DIREITA - OUTROS PAÍSES */}
+                {/* SIDEBAR DIREITA - OUTROS PAÍSES */}
                 <aside className="sidebar-right">
                     <h2 className="section-title">Outros Países</h2>
 

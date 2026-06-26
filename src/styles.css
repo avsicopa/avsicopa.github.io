@@ -641,115 +641,46 @@ body {
     color: var(--vermelho-cartao);
 }
 
-/* Responsividade para Tablets (até 992px) */
-@media (max-width: 992px) {
+/* Responsividade para Celulares (até 576px) */
+@media (max-width: 576px) {
+    /* ✅ HEADER - Logo à esquerda, QR Code à direita, título embaixo */
     .header {
-        flex-direction: column;
+        flex-direction: row !important; /* ✅ Sobrescreve o column do tablet */
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
         text-align: center;
     }
     
     .logo-container {
+        flex-basis: 80px !important; /* ✅ Logo maior no celular */
+        min-width: 70px;
         margin-right: 0;
-        margin-bottom: 10px;
-        flex-basis: 100px; /* ✅ Menor que PC (120px) */
-        min-width: 60px; /* ✅ Menor que PC (70px) */
+        margin-bottom: 0;
+        order: 1; /* ✅ Primeira posição (esquerda) */
     }
     
     .logo {
-        max-height: 50px; /* ✅ Menor que PC (60px) */
-    }
-    
-    .main-title {
-        font-size: 1.8em;
-    }
-    
-    .main-title .highlight {
-        font-size: 0.8em;
-    }
-    
-    .menu {
-        justify-content: center;
-        margin-top: 10px;
-    }
-    
-    .menu-item {
-        margin: 0 10px;
-    }
-    
-    .container {
-        flex-direction: column;
-        padding: 10px;
-        align-items: center; /* ✅ CENTRALIZA NO TABLET */
-    }
-    
-    .sidebar-left,
-    .sidebar-right {
-        flex: 1 1 auto;
-        max-height: none;
-        margin-bottom: 15px;
-        width: 100%; /* ✅ OCUPA LARGURA TOTAL */
-        max-width: 600px; /* ✅ LIMITA LARGURA MÁXIMA */
-    }
-    
-    .main-content {
-        flex: 1 1 auto;
-        max-height: none;
-        width: 100%; /* ✅ OCUPA LARGURA TOTAL */
-        max-width: 600px; /* ✅ LIMITA LARGURA MÁXIMA */
-    }
-    
-    .team-crest-central {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .team-display-central {
-        font-size: 1.6em;
-    }
-    
-    .vs-text-central {
-        font-size: 0.6em;
-    }
-    
-    .game-score {
-        font-size: 2em;
-    }
-    
-    .contact-content {
-        width: 95%;
-        padding: 15px;
-    }
-    
-    .contact-title {
-        font-size: 1.6em;
+        max-height: 70px !important; /* ✅ Logo maior que o padrão do tablet */
     }
     
     .qrcode-container {
-        flex-basis: 60px; /* ✅ Menor no tablet */
-        min-width: 50px;
-        margin-left: 10px;
+        flex-basis: 80px !important; /* ✅ QR Code maior no celular */
+        min-width: 70px;
+        margin-left: 0;
+        order: 3; /* ✅ Terceira posição (direita) */
+        display: block !important; /* ✅ Mostra QR Code (estava none no tablet) */
     }
     
     .qrcode {
-        max-height: 50px; /* ✅ Reduz tamanho */
+        max-height: 70px !important; /* ✅ QR Code maior */
     }
     
-    .palpite-item {
-        flex-direction: column;
-        gap: 5px;
+    .title-container {
+        flex-basis: 100%; /* ✅ Ocupa linha inteira */
+        order: 2; /* ✅ Segunda posição (fica embaixo) */
+        margin-top: 10px;
         text-align: center;
-    }
-}
-
-/* Responsividade para Celulares (até 576px) */
-@media (max-width: 576px) {
-    .logo-container {
-        flex-basis: 70px; /* ✅ Ainda menor no celular */
-        min-width: 50px;
-    }
-    
-    .logo {
-        max-height: 40px; /* ✅ Bem pequena no celular */
     }
     
     .main-title {
@@ -760,16 +691,57 @@ body {
         font-size: 0.6em;
     }
     
+    /* ✅ MENU - Palpitão em cima, resto em linha embaixo */
     .menu {
-        flex-direction: column;
-        gap: 8px;
-        align-items: center; /* ✅ CENTRALIZA ITENS DO MENU */
+        flex-direction: column !important;
+        gap: 10px;
+        align-items: stretch; /* ✅ Ocupa largura total */
+    }
+    
+    .palpite-item {
+        width: 100%; /* ✅ Palpitão ocupa linha inteira */
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+        text-align: center;
+        order: 1; /* ✅ Primeiro item */
+    }
+    
+    /* ✅ Linha com Visitantes, Nossas Lojas, Atualizar */
+    .menu-buttons-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 5px;
+        order: 2; /* ✅ Segundo item */
+    }
+    
+    .visitor-counter-item {
+        flex: 0 0 auto; /* ✅ Fica à esquerda */
+        margin: 0;
+        font-size: 0.75em; /* ✅ Menor para caber */
+    }
+    
+    .visitor-count-img {
+        height: 20px; /* ✅ Reduz tamanho do contador */
+    }
+    
+    .contact-menu,
+    .menu-item:not(.palpite-item):not(.visitor-counter-item) {
+        flex: 1; /* ✅ Dividem o espaço restante igualmente */
+        margin: 0;
+        font-size: 0.75em;
+        padding: 6px 4px;
+        white-space: nowrap;
     }
     
     .menu-item {
         margin: 0;
     }
     
+    /* Resto das regras */
     .section-title {
         font-size: 1.3em;
     }
@@ -828,14 +800,5 @@ body {
     
     .match-card {
         text-align: left; /* Mantém texto dos cards alinhado à esquerda */
-    }
-    
-    .qrcode-container {
-        flex-basis: 50px; /* ✅ Ainda menor no celular */
-        min-width: 40px;
-    }
-    
-    .qrcode {
-        max-height: 40px; /* ✅ Bem pequena */
     }
 }
