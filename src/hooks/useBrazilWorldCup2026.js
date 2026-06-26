@@ -10,9 +10,12 @@ const SEASON = 2026;
 // const CORS_PROXY_URL = "https://api.allorigins.win/raw?url=";
 // ❌ OPÇÃO 2 - CORS Anywhere:
 // const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+// ❌ OPÇÃO 3: ThingProxy (mais confiável):
+//const CORS_PROXY_URL = "https://thingproxy.freeboard.io/fetch/";
+// ❌ OPÇÃO 4: const CORS_PROXY_URL = "https://api.codetabs.com/v1/proxy?quest=";
+// ❌ OPÇÃO 5: const CORS_PROXY_URL = "https://corsproxy.org/?";
 
-// ✅ OPÇÃO 3: ThingProxy (mais confiável):
-const CORS_PROXY_URL = "https://thingproxy.freeboard.io/fetch/";
+const CORS_PROXY_URL = "https://cors-proxy-avsi.ti-bf2.workers.dev/?url=";
 
 const LIVE_STATUSES = ["LIVE", "IN_PLAY", "PAUSED"];
 const LIVE_DURATIONS = ["EXTRA_TIME", "PENALTY_SHOOTOUT"];

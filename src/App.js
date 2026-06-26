@@ -67,45 +67,59 @@ function App() {
         ];
     }, [otherMatches]);
 
+// ✅ Rotação automática de jogos
 useEffect(() => {
-    if (!loading && !error && !activeMatchId) {
-        // ✅ PRIORIDADE 1: Jogo do Brasil AO VIVO
-        if (brazilLiveNow && brazilLiveNow.length > 0) {
+    if (loading || error) return;
+
+    // PRIORIDADE 1: Jogo do Brasil AO VIVO (nunca rotaciona)
+    if (brazilLiveNow && brazilLiveNow.length > 0) {
+        if (activeMatchId !== brazilLiveNow[0].id) {
             setActiveMatchId(brazilLiveNow[0].id);
-            return;
         }
+        return; // Para aqui, não rotaciona
+    }
 
-        // ✅ PRIORIDADE 2: Próximo jogo do Brasil
-        if (brazilNextMatch) {
-            setActiveMatchId(brazilNextMatch.id);
-            return;
-        }
+    // PRIORIDADE 2: Jogos AO VIVO de outros países (rotaciona)
+    if (globalLiveNow && globalLiveNow.length > 0) {
+        const interval = setInterval(() => {
+            setActiveMatchId(prevId => {
+                const currentIndex = globalLiveNow.findIndex(m => m.id === prevId);
+                const nextIndex = (currentIndex + 1) % globalLiveNow.length;
+                return globalLiveNow[nextIndex].id;
+            });
+        }, 10000); // ✅ 10 segundos
 
-        // ✅ PRIORIDADE 3: Último resultado do Brasil
-        if (brazilPastResults && brazilPastResults.length > 0) {
-            setActiveMatchId(brazilPastResults[0].id);
-            return;
-        }
-
-        // PRIORIDADE 4: Jogos ao vivo de outros países
-        if (globalLiveNow && globalLiveNow.length > 0) {
+        // Define o primeiro jogo se não houver ativo
+        if (!activeMatchId || !globalLiveNow.find(m => m.id === activeMatchId)) {
             setActiveMatchId(globalLiveNow[0].id);
-            return;
         }
 
-        // PRIORIDADE 5: Próximo jogo de outros países
-        if (globalNextMatch) {
-            setActiveMatchId(globalNextMatch.id);
-            return;
-        }
+        return () => clearInterval(interval);
+    }
 
-        // PRIORIDADE 6: Outros jogos
-        if (otherMatches && otherMatches.length > 0) {
+    // PRIORIDADE 3: Próximo jogo do Brasil
+    if (brazilNextMatch) {
+        if (activeMatchId !== brazilNextMatch.id) {
+            setActiveMatchId(brazilNextMatch.id);
+        }
+        return;
+    }
+
+    // PRIORIDADE 4: Último resultado do Brasil
+    if (brazilPastResults && brazilPastResults.length > 0) {
+        if (activeMatchId !== brazilPastResults[0].id) {
+            setActiveMatchId(brazilPastResults[0].id);
+        }
+        return;
+    }
+
+    // PRIORIDADE 5: Qualquer outro jogo
+    if (otherMatches && otherMatches.length > 0) {
+        if (activeMatchId !== otherMatches[0].id) {
             setActiveMatchId(otherMatches[0].id);
-            return;
         }
     }
-}, [loading, error, activeMatchId, brazilLiveNow, brazilNextMatch, brazilPastResults, globalLiveNow, globalNextMatch, otherMatches]);
+}, [loading, error, activeMatchId, brazilLiveNow, globalLiveNow, brazilNextMatch, brazilPastResults, otherMatches]);
 
     const activeMatch = useMemo(() => {
         if (!activeMatchId || !Array.isArray(allMatches)) return null;
