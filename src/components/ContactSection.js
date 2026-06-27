@@ -150,7 +150,10 @@ function ContactSection({ show, onClose }) {
             <li>
               Serviços: Instalação/remoção de vidros, polimento de faróis,
               cristalização de para-brisa, reparo de para-brisa, gravação de
-              chassis, manutenção de teto solar
+              chassis, manutenção de teto solar e etc.
+            </li>
+            <li>
+              Site desenvolvido por 🤓 Onitla SA 📞 63 98111-0357
             </li>
           </ul>
         </div>

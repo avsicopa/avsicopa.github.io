@@ -404,6 +404,10 @@ useGoalSound(activeMatch);
     </div>
 )}
 
+<footer className="footer-dev">
+  Site desenvolvido por 🤓 Onitla SA 📞 63 98111-0357
+</footer>
+
 </>
     );
 }
