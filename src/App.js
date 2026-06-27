@@ -35,6 +35,7 @@ function App() {
 
     const [activeMatchId, setActiveMatchId] = useState(null);
     const [showContact, setShowContact] = useState(false);
+    const [imageModal, setImageModal] = useState(null); // ✅ ADICIONADO: Estado para modal de imagem
 
     // ✅ Garante que são arrays antes de fazer spread
     const leftSidebarMatches = useMemo(() => {
@@ -141,7 +142,8 @@ function App() {
                     <img
                         src={`${process.env.PUBLIC_URL}/LOGO_GRANDE.png`}
                         alt="Logo AVSI"
-                        className="logo"
+                        className="logo clickable-image"
+            onClick={() => setImageModal(`${process.env.PUBLIC_URL}/LOGO_GRANDE.png`)}
                     />
                 </div>
 
@@ -157,7 +159,8 @@ function App() {
                     <img
                         src={`${process.env.PUBLIC_URL}/QRCode-Bola.gif`}
                         alt="QR Code Palpite AVSI"
-                        className="qrcode"
+                        className="qrcode clickable-image"
+            onClick={() => setImageModal(`${process.env.PUBLIC_URL}/QRCode-Bola.gif`)}
                     />
                 </div>
             </header>
@@ -381,7 +384,18 @@ function App() {
 
             {/* CONTACT SECTION */}
             <ContactSection show={showContact} onClose={() => setShowContact(false)} />
-        </>
+        
+        {/* MODAL DE IMAGEM */}
+{imageModal && (
+    <div className="image-modal" onClick={() => setImageModal(null)}>
+        <div className="image-modal-content">
+            <button className="close-btn" onClick={() => setImageModal(null)}>×</button>
+            <img src={imageModal} alt="Visualização ampliada" />
+        </div>
+    </div>
+)}
+
+</>
     );
 }
 
