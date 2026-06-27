@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./styles.css";
 import { useBrazilWorldCup2026 } from "./hooks/useBrazilWorldCup2026";
+import { useGoalSound } from "./hooks/useGoalSound"; // ✅ Adicionado: Importa o hook useGoalSound
 import MatchCard from "./components/MatchCard";
 import ContactSection from "./components/ContactSection";
 import {
@@ -46,7 +47,7 @@ function App() {
         ];
     }, [brazilLiveNow, brazilNextMatch, brazilPastResults]);
 
-    const rightSidebarMatches = useMemo(() => {
+         const rightSidebarMatches = useMemo(() => {
         if (!Array.isArray(otherMatches)) return [];
         
         const pastResults = otherMatches
@@ -67,6 +68,14 @@ function App() {
             ...pastResults,
         ];
     }, [otherMatches]);
+
+    const activeMatch = useMemo(() => {
+        if (!activeMatchId || !Array.isArray(allMatches)) return null;
+        return allMatches.find((m) => m.id === activeMatchId) || null;
+    }, [activeMatchId, allMatches]);    
+    
+// ✅ ADICIONE AQUI - Hook de som de gol
+useGoalSound(activeMatch);
 
     // ✅ Rotação automática de jogos
     useEffect(() => {
@@ -123,10 +132,10 @@ function App() {
     }, [loading, error, activeMatchId, brazilLiveNow, globalLiveNow, brazilNextMatch, brazilPastResults, otherMatches]);
 
     // ✅ Encontra o jogo ativo
-    const activeMatch = useMemo(() => {
-        if (!activeMatchId || !Array.isArray(allMatches)) return null;
-        return allMatches.find((m) => m.id === activeMatchId) || null;
-    }, [activeMatchId, allMatches]);
+    // const activeMatch = useMemo(() => {
+        // if (!activeMatchId || !Array.isArray(allMatches)) return null;
+        // return allMatches.find((m) => m.id === activeMatchId) || null;
+    // }, [activeMatchId, allMatches]);
 
     const homeScore = activeMatch?.score?.fullTime?.home;
     const awayScore = activeMatch?.score?.fullTime?.away;

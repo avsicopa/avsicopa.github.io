@@ -126,33 +126,102 @@ export function isAdversaryHighlight(match) {
     return false;
 }
 
-export function translateMatchStage(stage) {
-    switch (stage) {
-        case "GROUP_STAGE":
-            return "Fase de Grupos";
-        case "ROUND_OF_16":
-            return "Oitavas de Final";
-        case "QUARTER_FINALS":
-            return "Quartas de Final";
-        case "SEMI_FINALS":
-            return "Semifinais";
-        case "FINAL":
-            return "Final";
-        default:
-            return stage || "-";
-    }
+// Dicionário de tradução de países
+const COUNTRY_TRANSLATIONS = {
+    // Europa
+    "Germany": "Alemanha",
+    "Spain": "Espanha",
+    "France": "França",
+    "England": "Inglaterra",
+    "Italy": "Itália",
+    "Portugal": "Portugal",
+    "Netherlands": "Holanda",
+    "Belgium": "Bélgica",
+    "Croatia": "Croácia",
+    "Denmark": "Dinamarca",
+    "Switzerland": "Suíça",
+    "Poland": "Polônia",
+    "Austria": "Áustria",
+    "Sweden": "Suécia",
+    "Norway": "Noruega",
+    "Serbia": "Sérvia",
+    "Ukraine": "Ucrânia",
+    "Czech Republic": "República Tcheca",
+    "Turkey": "Turquia",
+    "Russia": "Rússia",
+    "Scotland": "Escócia",
+    "Wales": "País de Gales",
+    "Greece": "Grécia",
+    "Romania": "Romênia",
+    
+    // Américas
+    "Brazil": "Brasil",
+    "Argentina": "Argentina",
+    "Uruguay": "Uruguai",
+    "Colombia": "Colômbia",
+    "Chile": "Chile",
+    "Peru": "Peru",
+    "Ecuador": "Equador",
+    "Paraguay": "Paraguai",
+    "Venezuela": "Venezuela",
+    "Bolivia": "Bolívia",
+    "Mexico": "México",
+    "United States": "Estados Unidos",
+    "USA": "Estados Unidos",
+    "Canada": "Canadá",
+    "Costa Rica": "Costa Rica",
+    "Jamaica": "Jamaica",
+    "Panama": "Panamá",
+    "Honduras": "Honduras",
+    
+    // África
+    "Morocco": "Marrocos",
+    "Senegal": "Senegal",
+    "Tunisia": "Tunísia",
+    "Nigeria": "Nigéria",
+    "Cameroon": "Camarões",
+    "Ghana": "Gana",
+    "Egypt": "Egito",
+    "Algeria": "Argélia",
+    "South Africa": "África do Sul",
+    "Ivory Coast": "Costa do Marfim",
+    
+    // Ásia
+    "Japan": "Japão",
+    "South Korea": "Coreia do Sul",
+    "Iran": "Irã",
+    "Saudi Arabia": "Arábia Saudita",
+    "Australia": "Austrália",
+    "Qatar": "Catar",
+    "Iraq": "Iraque",
+    "China": "China",
+    
+    // Outros
+    "New Zealand": "Nova Zelândia",
+    "Haiti": "Haiti",
+};
+
+// Dicionário de tradução de estágios
+const STAGE_TRANSLATIONS = {
+    "GROUP_STAGE": "Fase de Grupos",
+    "LAST_16": "Oitavas de Final",
+    "LAST_32": "Primeira Fase",
+    "ROUND_OF_16": "Oitavas de Final",
+    "QUARTER_FINALS": "Quartas de Final",
+    "SEMI_FINALS": "Semifinais",
+    "THIRD_PLACE": "Disputa de 3º Lugar",
+    "FINAL": "Final",
+    "QUALIFICATION": "Eliminatórias",
+};
+
+// Função para traduzir nome do país
+export function translateCountryName(countryName) {
+    if (!countryName) return "Time";
+    return COUNTRY_TRANSLATIONS[countryName] || countryName;
 }
 
-/* Traduz alguns nomes de países mostrados na interface */
-export function translateCountryName(name) {
-    switch (name) {
-        case "Brazil":
-            return "Brasil";
-        case "Morocco":
-            return "Marrocos";
-        case "Haiti":
-            return "Haiti";
-        default:
-            return name;
-    }
+// Função para traduzir estágio da competição
+export function translateMatchStage(stage) {
+    if (!stage || stage === "-") return "Não definido";
+    return STAGE_TRANSLATIONS[stage] || stage;
 }
