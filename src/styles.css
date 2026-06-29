@@ -761,6 +761,38 @@ body {
     }
 }
 
+/* Piscar por 15s quando sai gol */
+
+.game-score.goal-flash-home {
+  animation: flashHome 1s infinite;
+}
+
+.game-score.goal-flash-away {
+  animation: flashAway 1s infinite;
+}
+
+.game-score.goal-flash-brasil {
+  animation: flashBrasil 1s infinite;
+}
+
+/* HOME: vermelho <-> azul */
+@keyframes flashHome {
+  0%, 100% { background-color: #d94b4b; color: var(--branco); }
+  50%      { background-color: var(--azul-bandeira); color: var(--branco); }
+}
+
+/* AWAY: pink <-> azul */
+@keyframes flashAway {
+  0%, 100% { background-color: #ff2bd6; color: var(--branco); }
+  50%      { background-color: var(--azul-bandeira); color: var(--branco); }
+}
+
+/* BRASIL: verde <-> azul */
+@keyframes flashBrasil {
+  0%, 100% { background-color: var(--verde-bandeira); color: var(--branco); }
+  50%      { background-color: var(--azul-bandeira); color: var(--branco); }
+}
+
 /* Responsividade para Celulares (até 576px) */
 @media (max-width: 576px) {
     /* ✅ HEADER - Logo, Título e QR Code NA MESMA LINHA */

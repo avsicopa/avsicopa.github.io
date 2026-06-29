@@ -75,7 +75,22 @@ function App() {
     }, [activeMatchId, allMatches]);    
     
 // ✅ ADICIONE AQUI - Hook de som de gol
-useGoalSound(activeMatch);
+// useGoalSound(activeMatch);
+const goalHighlight = useGoalSound(activeMatch);
+
+const highlightForThisMatch =
+  goalHighlight && activeMatch && goalHighlight.matchId === activeMatch.id ? goalHighlight : null;
+
+const scoreClassName = [
+  "game-score",
+  highlightForThisMatch
+    ? highlightForThisMatch.isBrazilGoal
+      ? "goal-flash-brasil"
+      : highlightForThisMatch.scorerSide === "HOME"
+        ? "goal-flash-home"
+        : "goal-flash-away"
+    : "",
+].join(" ");
 
     // ✅ Rotação automática de jogos
     useEffect(() => {
@@ -293,10 +308,9 @@ useGoalSound(activeMatch);
                             </div>
 
                             {/* Placar abaixo */}
-                            <div className="game-score">
-                                {homeScore ?? "-"} x {awayScore ?? "-"}
-                            </div>
-
+                            <div className={scoreClassName}>
+  {homeScore ?? "-"} x {awayScore ?? "-"}
+</div>
                             {/* Resumo abaixo do placar */}
                             <div className="game-summary">
                                 <h3>Resumo</h3>

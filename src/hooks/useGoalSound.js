@@ -1,69 +1,105 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 const BRAZIL_TEAM_ID = 764;
 
+function getScore(match) {
+  const home = match?.score?.fullTime?.home;
+  const away = match?.score?.fullTime?.away;
+  if (typeof home !== "number" || typeof away !== "number") return null;
+  return { home, away };
+}
+
+/**
+ * Retorna:
+ * - play: boolean (se deve tocar)
+ * - scorerSide: "HOME" | "AWAY" | null (quem marcou)
+ * - isBrazilGoal: boolean
+ */
+function diffScore(prev, next, match) {
+  if (!prev || !next) return { play: false, scorerSide: null, isBrazilGoal: false };
+
+  const homeScored = next.home > prev.home;
+  const awayScored = next.away > prev.away;
+  if (!homeScored && !awayScored) return { play: false, scorerSide: null, isBrazilGoal: false };
+
+  // Em tese pode haver mais de 1 gol entre updates; aqui prioriza o lado que aumentou
+  const scorerSide = homeScored ? "HOME" : "AWAY";
+
+  const isBrazilHome = match?.homeTeam?.id === BRAZIL_TEAM_ID;
+  const isBrazilAway = match?.awayTeam?.id === BRAZIL_TEAM_ID;
+
+  const isBrazilGoal = (scorerSide === "HOME" && isBrazilHome) || (scorerSide === "AWAY" && isBrazilAway);
+
+  return { play: true, scorerSide, isBrazilGoal };
+}
+
+/**
+ * - Toca som apenas se o placar daquele match.id aumentou desde a última vez.
+ * - Expõe um "highlight" de 15s para o App aplicar CSS.
+ */
 export function useGoalSound(activeMatch) {
-    const previousScoreRef = useRef(null);
-    const audioRefBrazil = useRef(null);
-    const audioRefAdversary = useRef(null);
+  const lastScoreByMatchIdRef = useRef(new Map()); // matchId -> {home, away}
 
-    useEffect(() => {
-        // Cria elementos de áudio se não existirem
-        if (!audioRefBrazil.current) {
-            audioRefBrazil.current = new Audio(`${process.env.PUBLIC_URL}/Gol-Brasil.mp3`);
-            audioRefBrazil.current.volume = 0.7;
-        }
-        if (!audioRefAdversary.current) {
-            audioRefAdversary.current = new Audio(`${process.env.PUBLIC_URL}/Gol-Advers.mp3`);
-            audioRefAdversary.current.volume = 0.7;
-        }
-    }, []);
+  const [goalHighlight, setGoalHighlight] = useState(null);
+  // goalHighlight: { matchId, scorerSide: "HOME"|"AWAY", isBrazilGoal, until }
 
-    useEffect(() => {
-        if (!activeMatch) return;
+  const audioBrazilRef = useRef(null);
+  const audioOtherRef = useRef(null);
 
-        const currentHomeScore = activeMatch.score?.fullTime?.home;
-        const currentAwayScore = activeMatch.score?.fullTime?.away;
+  // cria audio 1x
+  useEffect(() => {
+    if (!audioBrazilRef.current) {
+      audioBrazilRef.current = new Audio(`${process.env.PUBLIC_URL}/Gol-Brasil.mp3`);
+      audioBrazilRef.current.volume = 0.8;
+    }
+    if (!audioOtherRef.current) {
+      audioOtherRef.current = new Audio(`${process.env.PUBLIC_URL}/Gol-Advers.mp3`);
+      audioOtherRef.current.volume = 0.8;
+    }
+  }, []);
 
-        // Se não tem placar ainda, não faz nada
-        if (currentHomeScore === undefined || currentAwayScore === undefined) return;
+  useEffect(() => {
+    if (!activeMatch?.id) return;
 
-        // Primeira vez que carrega, salva o placar mas não toca som
-        if (!previousScoreRef.current) {
-            previousScoreRef.current = {
-                home: currentHomeScore,
-                away: currentAwayScore,
-            };
-            return;
-        }
+    const matchId = activeMatch.id;
+    const next = getScore(activeMatch);
+    if (!next) return;
 
-        const previousHome = previousScoreRef.current.home;
-        const previousAway = previousScoreRef.current.away;
+    const prev = lastScoreByMatchIdRef.current.get(matchId) || null;
 
-        // Verifica se houve mudança no placar
-        const homeScored = currentHomeScore > previousHome;
-        const awayScored = currentAwayScore > previousAway;
+    // Se é a primeira vez que vemos esse jogo, apenas registra e NÃO toca.
+    if (!prev) {
+      lastScoreByMatchIdRef.current.set(matchId, next);
+      return;
+    }
 
-        if (homeScored || awayScored) {
-            const isBrazilHome = activeMatch.homeTeam?.id === BRAZIL_TEAM_ID;
-            const isBrazilAway = activeMatch.awayTeam?.id === BRAZIL_TEAM_ID;
+    const { play, scorerSide, isBrazilGoal } = diffScore(prev, next, activeMatch);
 
-            // Brasil fez gol
-            if ((isBrazilHome && homeScored) || (isBrazilAway && awayScored)) {
-                console.log('🎉 GOL DO BRASIL!');
-                audioRefBrazil.current?.play().catch(err => console.error('Erro ao tocar som:', err));
-            }
-            // Adversário fez gol
-            else if (homeScored || awayScored) {
-                console.log('😔 Gol do adversário');
-                audioRefAdversary.current?.play().catch(err => console.error('Erro ao tocar som:', err));
-            }
+    // atualiza sempre o "último placar conhecido"
+    lastScoreByMatchIdRef.current.set(matchId, next);
 
-            // Atualiza o placar anterior
-            previousScoreRef.current = {
-                home: currentHomeScore,
-                away: currentAwayScore,
-            };
-        }
-    }, [activeMatch]);
+    if (!play) return;
+
+    // toca som
+    const audio = isBrazilGoal ? audioBrazilRef.current : audioOtherRef.current;
+    audio?.play().catch(() => {
+      // navegadores podem bloquear autoplay; sem spam de erro
+    });
+
+    // ativa highlight por 15s
+    const until = Date.now() + 15000;
+    setGoalHighlight({ matchId, scorerSide, isBrazilGoal, until });
+
+    const t = setTimeout(() => {
+      setGoalHighlight((cur) => {
+        if (!cur) return null;
+        if (cur.matchId !== matchId) return cur; // não apaga outro highlight
+        return null;
+      });
+    }, 15000);
+
+    return () => clearTimeout(t);
+  }, [activeMatch]);
+
+  return goalHighlight;
 }
