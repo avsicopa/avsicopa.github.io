@@ -89,7 +89,8 @@ function getRecentEvents(match) {
 }
 
 async function apiGet(url, signal) {
-    const proxiedUrl = `${CORS_PROXY_URL}${url}`;
+    /* const proxiedUrl = `${CORS_PROXY_URL}${url}`; */
+const proxiedUrl = `${CORS_PROXY_URL}${encodeURIComponent(url)}`;
 
     const res = await fetch(proxiedUrl, {
         signal,
@@ -180,7 +181,7 @@ export function useBrazilWorldCup2026() {
         if (!hasLive) return;
 
         console.log("🔄 Atualização automática ativada (30s)");
-        const interval = setInterval(load, 15000);
+        const interval = setInterval(load, 30000);
         return () => clearInterval(interval);
     }, [matches, load]);
 

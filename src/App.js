@@ -29,7 +29,6 @@ function App() {
         brazilNextMatch,
         brazilPastResults,
         otherMatches,
-        globalLiveNow,
         allMatches,
         reload,
     } = useBrazilWorldCup2026();
@@ -81,16 +80,23 @@ const goalHighlight = useGoalSound(activeMatch);
 const highlightForThisMatch =
   goalHighlight && activeMatch && goalHighlight.matchId === activeMatch.id ? goalHighlight : null;
 
-const scoreClassName = [
-  "game-score",
-  highlightForThisMatch
-    ? highlightForThisMatch.isBrazilGoal
-      ? "goal-flash-brasil"
-      : highlightForThisMatch.scorerSide === "HOME"
-        ? "goal-flash-home"
-        : "goal-flash-away"
-    : "",
-].join(" ");
+  const homeHighlightClass =
+  highlightForThisMatch?.scorerSide === "HOME"
+    ? (highlightForThisMatch.isBrazilGoal ? "goal-flash-brasil" : "goal-flash-home")
+    : "";
+
+const awayHighlightClass =
+  highlightForThisMatch?.scorerSide === "AWAY"
+    ? (highlightForThisMatch.isBrazilGoal ? "goal-flash-brasil" : "goal-flash-away")
+    : "";
+
+// ✅ COLE AQUI (antes do useEffect de rotação)
+const rotatingLiveMatches = useMemo(() => {
+  const liveStatuses = new Set(["LIVE", "IN_PLAY", "PAUSED"]);
+  return (Array.isArray(allMatches) ? allMatches : []).filter((m) =>
+    liveStatuses.has(m.status)
+  );
+}, [allMatches]);
 
     // ✅ Rotação automática de jogos
     useEffect(() => {
@@ -104,39 +110,69 @@ const scoreClassName = [
             return; // Para aqui, não rotaciona
         }
 
-        // PRIORIDADE 2: Jogos AO VIVO de outros países (rotaciona a cada 10s)
-        if (globalLiveNow && globalLiveNow.length > 0) {
-            const interval = setInterval(() => {
-                setActiveMatchId(prevId => {
-                    const currentIndex = globalLiveNow.findIndex(m => m.id === prevId);
-                    const nextIndex = (currentIndex + 1) % globalLiveNow.length;
-                    return globalLiveNow[nextIndex].id;
-                });
-            }, 10000); // ✅ 10 segundos
+// PRIORIDADE 2: Jogos AO VIVO (rotaciona a cada 10s)
+if (rotatingLiveMatches.length > 0) {
+  const interval = setInterval(() => {
+    setActiveMatchId((prevId) => {
+      const currentIndex = rotatingLiveMatches.findIndex((m) => m.id === prevId);
+      const nextIndex = (currentIndex + 1) % rotatingLiveMatches.length;
+      return rotatingLiveMatches[nextIndex].id;
+    });
+  }, 10000);
 
-            // Define o primeiro jogo se não houver ativo
-            if (!activeMatchId || !globalLiveNow.find(m => m.id === activeMatchId)) {
-                setActiveMatchId(globalLiveNow[0].id);
-            }
+  if (!activeMatchId || !rotatingLiveMatches.find((m) => m.id === activeMatchId)) {
+    setActiveMatchId(rotatingLiveMatches[0].id);
+  }
 
-            return () => clearInterval(interval);
-        }
+  return () => clearInterval(interval);
+}
 
-        // PRIORIDADE 3: Próximo jogo do Brasil
-        if (brazilNextMatch) {
-            if (activeMatchId !== brazilNextMatch.id) {
-                setActiveMatchId(brazilNextMatch.id);
-            }
-            return;
-        }
+// PRIORIDADE 3: não há ao vivo → escolher próximo horário (rotativo se tiver empate)
+const now = Date.now();
+const futureMatches = (Array.isArray(allMatches) ? allMatches : [])
+  .filter(m => ["SCHEDULED", "TIMED"].includes(m.status))
+  .filter(m => new Date(m.utcDate).getTime() >= now)
+  .sort((a,b) => new Date(a.utcDate) - new Date(b.utcDate));
 
-        // PRIORIDADE 4: Último resultado do Brasil
-        if (brazilPastResults && brazilPastResults.length > 0) {
-            if (activeMatchId !== brazilPastResults[0].id) {
-                setActiveMatchId(brazilPastResults[0].id);
-            }
-            return;
-        }
+if (futureMatches.length > 0) {
+  const nextTime = new Date(futureMatches[0].utcDate).getTime();
+
+  // todos os jogos do MESMO horário do próximo jogo
+  const sameTimeMatches = futureMatches.filter(m => new Date(m.utcDate).getTime() === nextTime);
+
+  // se houver Brasil nesse mesmo horário, coloca ele primeiro
+  sameTimeMatches.sort((a,b) => {
+    const aIsBrazil = (a.homeTeam?.id === 764 || a.awayTeam?.id === 764) ? 0 : 1;
+    const bIsBrazil = (b.homeTeam?.id === 764 || b.awayTeam?.id === 764) ? 0 : 1;
+    return aIsBrazil - bIsBrazil;
+  });
+
+  if (sameTimeMatches.length === 1) {
+    if (activeMatchId !== sameTimeMatches[0].id) setActiveMatchId(sameTimeMatches[0].id);
+    return;
+  }
+
+  // mais de um no mesmo horário → rotaciona
+  const interval = setInterval(() => {
+    setActiveMatchId(prevId => {
+      const currentIndex = sameTimeMatches.findIndex(m => m.id === prevId);
+      const nextIndex = (currentIndex + 1) % sameTimeMatches.length;
+      return sameTimeMatches[nextIndex].id;
+    });
+  }, 10000);
+
+  if (!activeMatchId || !sameTimeMatches.find(m => m.id === activeMatchId)) {
+    setActiveMatchId(sameTimeMatches[0].id);
+  }
+
+  return () => clearInterval(interval);
+}
+
+// PRIORIDADE 4: últimos resultados do Brasil
+if (brazilPastResults && brazilPastResults.length > 0) {
+  if (activeMatchId !== brazilPastResults[0].id) setActiveMatchId(brazilPastResults[0].id);
+  return;
+}
 
         // PRIORIDADE 5: Qualquer outro jogo
         if (otherMatches && otherMatches.length > 0) {
@@ -144,7 +180,7 @@ const scoreClassName = [
                 setActiveMatchId(otherMatches[0].id);
             }
         }
-    }, [loading, error, activeMatchId, brazilLiveNow, globalLiveNow, brazilNextMatch, brazilPastResults, otherMatches]);
+    }, [loading, error, activeMatchId, brazilLiveNow, rotatingLiveMatches, brazilNextMatch, brazilPastResults, otherMatches]);
 
     // ✅ Encontra o jogo ativo
     // const activeMatch = useMemo(() => {
@@ -152,12 +188,12 @@ const scoreClassName = [
         // return allMatches.find((m) => m.id === activeMatchId) || null;
     // }, [activeMatchId, allMatches]);
 
-    const homeScore = activeMatch?.score?.fullTime?.home;
-    const awayScore = activeMatch?.score?.fullTime?.away;
-    const homeTeamCrest = activeMatch?.homeTeam?.crest || "";
-    const awayTeamCrest = activeMatch?.awayTeam?.crest || "";
-    const homeTeamName = translateCountryName(activeMatch?.homeTeam?.name || "Time da Casa");
-    const awayTeamName = translateCountryName(activeMatch?.awayTeam?.name || "Time Visitante");
+const homeScore = activeMatch?.liveScore?.home ?? activeMatch?.score?.fullTime?.home;
+const awayScore = activeMatch?.liveScore?.away ?? activeMatch?.score?.fullTime?.away;
+const homeTeamCrest = activeMatch?.homeTeam?.crest || "";
+const awayTeamCrest = activeMatch?.awayTeam?.crest || "";
+const homeTeamName = translateCountryName(activeMatch?.homeTeam?.name || "Time da Casa");
+const awayTeamName = translateCountryName(activeMatch?.awayTeam?.name || "Time Visitante");
 
     return (
         <>
@@ -275,41 +311,49 @@ const scoreClassName = [
                 {/* ÁREA CENTRAL */}
                 <main className="main-content">
                     {/* ✅ Indicador quando está rotacionando */}
-                    {globalLiveNow && globalLiveNow.length > 1 && 
-                     (!brazilLiveNow || brazilLiveNow.length === 0) && (
-                        <div className="rotation-indicator">
-                            🔄 Rotação automática
-                        </div>
-                    )}
-
+                    {rotatingLiveMatches.length > 1 &&
+ (!brazilLiveNow || brazilLiveNow.length === 0) && (
+   <div className="rotation-indicator">
+     🔄 Rotação automática
+   </div>
+)}
                     {activeMatch ? (
                         <div className="game-details">
                             {/* Times na mesma linha com vs. */}
-                            <div className="team-display-central">
-                                {homeTeamCrest && (
-                                    <img
-                                        src={homeTeamCrest}
-                                        alt={`${homeTeamName} crest`}
-                                        className="team-crest-central"
-                                    />
-                                )}
-                                
-                                <span className="team-name-central">{homeTeamName}</span>
-                                <span className="vs-text-central">vs.</span>
-                                <span className="team-name-central">{awayTeamName}</span>
+                            
+                        <div className="team-display-central">
 
-                                {awayTeamCrest && (
-                                    <img
-                                        src={awayTeamCrest}
-                                        alt={`${awayTeamName} crest`}
-                                        className="team-crest-central"
-                                    />
-                                )}
-                            </div>
+  <div className={`team-side-central ${homeHighlightClass}`}>
+    {homeTeamCrest && (
+      <img
+        src={homeTeamCrest}
+        alt={`${homeTeamName} crest`}
+        className="team-crest-central"
+      />
+    )}
+    <span className="team-name-central">{homeTeamName}</span>
+  </div>
+
+  <span className="vs-text-central">vs.</span>
+
+  <div className={`team-side-central ${awayHighlightClass}`}>
+    <span className="team-name-central">{awayTeamName}</span>
+
+    {awayTeamCrest && (
+      <img
+        src={awayTeamCrest}
+        alt={`${awayTeamName} crest`}
+        className="team-crest-central"
+      />
+    )}
+  </div>
+
 
                             {/* Placar abaixo */}
-                            <div className={scoreClassName}>
+<div className="game-score">
   {homeScore ?? "-"} x {awayScore ?? "-"}
+</div>
+
 </div>
                             {/* Resumo abaixo do placar */}
                             <div className="game-summary">

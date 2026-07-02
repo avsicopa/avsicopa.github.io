@@ -3,10 +3,21 @@ import { useEffect, useRef, useState } from "react";
 const BRAZIL_TEAM_ID = 764;
 
 function getScore(match) {
+  // 1) Preferir placar ao vivo calculado pelo hook (liveScore)
+  const liveHome = match?.liveScore?.home;
+  const liveAway = match?.liveScore?.away;
+  if (typeof liveHome === "number" && typeof liveAway === "number") {
+    return { home: liveHome, away: liveAway };
+  }
+
+  // 2) Fallback: fullTime (normalmente vem no fim)
   const home = match?.score?.fullTime?.home;
   const away = match?.score?.fullTime?.away;
-  if (typeof home !== "number" || typeof away !== "number") return null;
-  return { home, away };
+  if (typeof home === "number" && typeof away === "number") {
+    return { home, away };
+  }
+
+  return null;
 }
 
 /**

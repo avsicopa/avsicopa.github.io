@@ -18,8 +18,8 @@ function MatchCard({ match, onClick, isActive }) {
     const homeTeamCrest = match.homeTeam?.crest || "";
     const awayTeamCrest = match.awayTeam?.crest || "";
 
-    const homeScore = match.score?.fullTime?.home;
-    const awayScore = match.score?.fullTime?.away;
+    const homeScore = match?.liveScore?.home ?? match?.score?.fullTime?.home;
+    const awayScore = match?.liveScore?.away ?? match?.score?.fullTime?.away;
 
     const isLive =
         ["LIVE", "IN_PLAY", "PAUSED"].includes(match.status) ||

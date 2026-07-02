@@ -260,7 +260,7 @@ body {
 }
 
 .match-status-badge.live {
-    background-color: #ca4c4c;
+    background-color: #e47575;
     color: var(--azul-bandeira);
     font-weight: 700;
 }
@@ -311,9 +311,13 @@ body {
     margin-bottom: 8px; /* Reduzido */
 }
 
-/* Detalhes do Jogo (Central) */
+/* Central - garante que confronto, placar e resumo fiquem em coluna */
 .game-details {
-    text-align: center;
+  text-align: center;      /* mantém o que você já tinha */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 /* ✅ ADICIONE AQUI: */
@@ -336,15 +340,27 @@ body {
     50% { opacity: 0.6; }
 }
 
+/* Confronto: HOME vs AWAY numa linha */
 .team-display-central {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; /* Reduzido */
-    margin-bottom: 15px; /* Reduzido */
-    font-size: 2em; /* Reduzido */
-    font-weight: bold;
-    color: var(--azul-bandeira);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+
+  /* mantém do seu estilo atual */
+  margin-bottom: 15px;
+  font-size: 2em;
+  font-weight: bold;
+  color: var(--azul-bandeira);
+}
+
+/* Wrapper do lado (escudo+nome) */
+.team-side-central {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .team-crest-central {
@@ -353,31 +369,36 @@ body {
     object-fit: contain;
 }
 
-.team-name-central {
-    /* Estilo para o nome do time */
-}
-
 .vs-text-central {
     color: var(--cinza-escuro);
     font-size: 0.7em; /* "vs." um pouco menor */
 }
 
+/* Placar centralizado */
 .game-score {
-    font-size: 2.5em; /* Reduzido */
-    font-weight: bold;
+    font-size: 1.2em; /* antes 2.5em */
+    font-weight: 800;
     color: var(--azul-bandeira);
-    margin-bottom: 20px; /* Reduzido */
+    margin-bottom: 10px; /* Reduzido 20-10 */
     background-color: var(--amarelo-bandeira);
-    display: inline-block;
-    padding: 8px 20px; /* Reduzido */
+    display: block;      /* volta a ser mais “compacto” */
+    width: auto;                /* não ocupa 100% */
+    padding: 6px 14px;          /* era 8px 20px */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;   /* ✅ adiciona */
+    /* max-width: none; */
+    /* remove limite de caixa grande */
+    max-width: 320px; /* opcional: evita ficar “enorme” */
+    margin: 8px auto 16px;
+    /* margin-left: auto;    ✅ adiciona */
+    /* margin-right: auto;   ✅ adiciona */
 }
 
 .game-summary {
     text-align: left;
     background-color: var(--cinza-claro);
-    padding: 12px; /* Reduzido *15-12/
+    padding: 12px; /* Reduzido 15-12 */
     border-radius: 8px;
     margin-top: 20px; /* Reduzido */
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -386,7 +407,7 @@ body {
 .game-summary h3 {
     color: var(--verde-bandeira);
     font-size: 1.4em; /* Reduzido */
-    margin-bottom: 8px; /* Reduzido *10-8/
+    margin-bottom: 8px; /* Reduzido 10-8 */
     border-bottom: 1px solid var(--cinza-medio);
     padding-bottom: 8px; /* Reduzido */
 }
@@ -403,8 +424,8 @@ body {
 
 .game-summary ul li {
     background-color: var(--branco);
-    margin-bottom: 5px; /* Reduzido *6-5/
-    padding: 6px 10px; /* Reduzido *8x12-6x10/
+    margin-bottom: 5px; /* Reduzido 6-5 */
+    padding: 6px 10px; /* Reduzido 8x12-6x10 */
     border-radius: 5px;
     border-left: 4px solid var(--azul-bandeira);
     display: flex;
@@ -761,18 +782,26 @@ body {
     }
 }
 
-/* Piscar por 15s quando sai gol */
-
-.game-score.goal-flash-home {
+/* Piscar por 15s quando sai gol (aplicado no time que marcou) */
+.goal-flash-home {
   animation: flashHome 1s infinite;
 }
 
-.game-score.goal-flash-away {
+.goal-flash-away {
   animation: flashAway 1s infinite;
 }
 
-.game-score.goal-flash-brasil {
+.goal-flash-brasil {
   animation: flashBrasil 1s infinite;
+}
+
+/* Dica: deixar mais evidente no texto */
+.goal-flash-home,
+.goal-flash-away,
+.goal-flash-brasil {
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: var(--branco);
 }
 
 /* HOME: vermelho <-> azul */
@@ -953,11 +982,7 @@ body {
         width: 30px;
         height: 30px;
     }
-    
-    .game-score {
-        font-size: 1.8em;
-    }
-    
+       
     .game-summary {
         text-align: left;
     }
