@@ -173,6 +173,16 @@ function mapMatch(match) {
         liveScore,
     });
 
+    console.log("STATUS DEBUG:", {
+        home: match.homeTeam?.name,
+        away: match.awayTeam?.name,
+        status: match.status,
+        duration: match.score?.duration,
+        goals: match.goals?.length,
+        bookings: match.bookings?.length,
+        displayStatus: getDetailedStatus(match),
+    });
+
     return {
         ...match,
         displayStatus: getDetailedStatus(match),
