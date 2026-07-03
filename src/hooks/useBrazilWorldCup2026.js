@@ -57,26 +57,38 @@ function getLiveScore(match) {
 // ✅ CORRIGIDO: Ordem de verificação correta
 function getDetailedStatus(match) {
     if (!match) return "Aguardando";
-    
+
     const duration = match.score?.duration;
     const status = match.status;
-    
-    // Verifica primeiro o status principal
+    const goals = Array.isArray(match.goals) ? match.goals : [];
+    const bookings = Array.isArray(match.bookings) ? match.bookings : [];
+
+    // Status finais / pré-jogo
     if (status === "FINISHED") return "✅ Finalizado";
     if (status === "SCHEDULED" || status === "TIMED") return "📅 Agendado";
     if (status === "POSTPONED") return "⏸️ Adiado";
     if (status === "CANCELED" || status === "CANCELLED") return "❌ Cancelado";
-    
-    // Status de jogo ao vivo
-    if (status === "PAUSED") return "⏸️ Intervalo";
+
+    // Status especiais
+    if (duration === "EXTRA_TIME") return "⏱️ Prorrogação";
+    if (duration === "PENALTY_SHOOTOUT") return "🎯 Pênaltis";
+
+    // Jogo em andamento
     if (status === "LIVE" || status === "IN_PLAY") {
-        if (duration === "EXTRA_TIME") return "⏱️ Prorrogação";
-        if (duration === "PENALTY_SHOOTOUT") return "🎯 Pênaltis";
-        if (duration === "REGULAR") return "⚽ Em Jogo";
+        return "⚽ Em Jogo";
+    }
+
+    // Intervalo: mantém só quando a API realmente insistir nisso
+    if (status === "PAUSED") {
+        return "⏸️ Intervalo";
+    }
+
+    // Fallback inteligente: se houver sinais de atividade recente, considera ao vivo
+    if (goals.length > 0 || bookings.length > 0) {
         return "🔴 Ao Vivo";
     }
-    
-    return status;
+
+    return status || "Aguardando";
 }
 
 // ✅ Formatar eventos recentes
