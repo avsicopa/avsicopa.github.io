@@ -28,11 +28,30 @@ function isLiveMatch(match) {
     );
 }
 
-function getLiveScoreFromGoals(match) {
+function getLiveScore(match) {
     const goals = Array.isArray(match.goals) ? match.goals : [];
-    const home = goals.filter((goal) => goal.team?.side === "HOME").length;
-    const away = goals.filter((goal) => goal.team?.side === "AWAY").length;
-    return { home, away };
+    const goalsHome = goals.filter((goal) => goal.team?.side === "HOME").length;
+    const goalsAway = goals.filter((goal) => goal.team?.side === "AWAY").length;
+
+    const fullHome = match.score?.fullTime?.home;
+    const fullAway = match.score?.fullTime?.away;
+
+    const hasGoalsData = goals.length > 0;
+    const hasFullTimeScore =
+        fullHome !== null &&
+        fullHome !== undefined &&
+        fullAway !== null &&
+        fullAway !== undefined;
+
+    if (hasGoalsData) {
+        return { home: goalsHome, away: goalsAway };
+    }
+
+    if (hasFullTimeScore) {
+        return { home: fullHome, away: fullAway };
+    }
+
+    return { home: 0, away: 0 };
 }
 
 // ✅ CORRIGIDO: Ordem de verificação correta
@@ -130,13 +149,23 @@ function sortDesc(a, b) {
 
 function mapMatch(match) {
     const isLive = isLiveMatch(match);
-    const liveScore = isLive ? getLiveScoreFromGoals(match) : null;
+    const liveScore = isLive ? getLiveScore(match) : null;
+
+    console.log("MATCH DEBUG:", {
+        id: match.id,
+        status: match.status,
+        home: match.homeTeam?.name,
+        away: match.awayTeam?.name,
+        fullTime: match.score?.fullTime,
+        goals: match.goals,
+        liveScore,
+    });
 
     return {
         ...match,
         displayStatus: getDetailedStatus(match),
         liveScore,
-        latestEvents: getRecentEvents(match), // ✅ Eventos formatados
+        latestEvents: getRecentEvents(match),
     };
 }
 
