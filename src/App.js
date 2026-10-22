@@ -463,7 +463,7 @@ const awayTeamName = translateCountryName(activeMatch?.awayTeam?.name || "Time V
 )}
 
 <footer className="footer-dev">
-  Site desenvolvido por 🤓 Altino "{JB}" 📞 063 98111-0357 (Whatsapp)
+  Site desenvolvido por 🤓 Altino JB 📞 063 98111-0357 (Whatsapp)
 </footer>
 
 </>
