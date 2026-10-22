@@ -153,7 +153,7 @@ function ContactSection({ show, onClose }) {
               chassis, manutenção de teto solar e etc.
             </li>
             <li>
-              Site desenvolvido por 🤓 Altino JB 📞 063 98111-0357
+              Site desenvolvido por 🤓 Altino JB 📞 63 98111-0357
             </li>
           </ul>
         </div>
