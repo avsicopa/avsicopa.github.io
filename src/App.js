@@ -463,7 +463,7 @@ const awayTeamName = translateCountryName(activeMatch?.awayTeam?.name || "Time V
 )}
 
 <footer className="footer-dev">
-  Site desenvolvido por 🤓 Onitla SA 📞 63 98111-0357
+  Site desenvolvido por 🤓 Onitla SA 📞 063 98111-0357 (Whatsapp)
 </footer>
 
 </>
